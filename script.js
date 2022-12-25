@@ -1,9 +1,10 @@
 const XOBlocks = Array.from(document.querySelectorAll("#lines div"));
-let playerXO;
+let playerXO = "X"; //temp
+let opponentXO = "O"; //temp
 let XOMatrix = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9],
+    ["-", "-", "-"],
+    ["-", "-", "-"],
+    ["-", "-", "-"],
 ];
 for (let i in XOBlocks) {
     XOBlocks[i].addEventListener("click", function () {
@@ -12,39 +13,55 @@ for (let i in XOBlocks) {
             XOBlocks[i].style.cursor = "default";
             console.log(i, Math.floor(i / 3), Math.floor(i % 3));
             XOMatrix[Math.floor(i / 3)][Math.floor(i % 3)] = playerXO;
-            endGameChecker(playerXO);
             changeColor();
+            if (!endGameChecker(playerXO, 3, endGame)) {
+                if (endGameChecker(playerXO, 2, opponentCounterMove)) {
+                }
+            }
         }
     });
 }
-function endGameChecker(ckeckFor) {
+function endGameChecker(ckeckFor, countTo, endGame) {
     let inlineCounter;
+    let outputFunction;
     for (let i = 0; i < 3; i++) {
         inlineCounter = 0;
         for (let j = 0; j < 3; j++) {
             if (XOMatrix[i][j] == ckeckFor) inlineCounter++;
         }
-        if (inlineCounter == 3) endGame(++i, false, false);
+        if (inlineCounter == countTo) {
+            endGame(++i, false, false);
+            outputFunction = true;
+        }
     }
     for (let i = 0; i < 3; i++) {
         inlineCounter = 0;
         for (let j = 0; j < 3; j++) {
             if (XOMatrix[j][i] == ckeckFor) inlineCounter++;
         }
-        if (inlineCounter == 3) endGame(false, ++i, false);
+        if (inlineCounter == countTo) {
+            endGame(false, ++i, false);
+            outputFunction = true;
+        }
     }
-    if (
-        XOMatrix[0][0] == ckeckFor &&
-        XOMatrix[1][1] == ckeckFor &&
-        XOMatrix[2][2] == ckeckFor
-    )
+    inlineCounter = 0;
+    if (XOMatrix[0][0] == ckeckFor) inlineCounter++;
+    if (XOMatrix[1][1] == ckeckFor) inlineCounter++;
+    if (XOMatrix[2][2] == ckeckFor) inlineCounter++;
+    if (inlineCounter == countTo) {
         endGame(false, 1, true);
-    if (
-        XOMatrix[0][2] == ckeckFor &&
-        XOMatrix[1][1] == ckeckFor &&
-        XOMatrix[2][0] == ckeckFor
-    )
+        outputFunction = true;
+    }
+    inlineCounter = 0;
+    if (XOMatrix[0][2] == ckeckFor) inlineCounter++;
+    if (XOMatrix[1][1] == ckeckFor) inlineCounter++;
+    if (XOMatrix[2][0] == ckeckFor) inlineCounter++;
+    if (inlineCounter == countTo) {
         endGame(false, 2, true);
+        outputFunction = true;
+    }
+    if (outputFunction == true) return true;
+    return false;
 }
 function endGame(i, j, diagonal) {
     console.log("Game Over");
@@ -52,6 +69,24 @@ function endGame(i, j, diagonal) {
     if (!diagonal && i) lineGrider(i);
     if (!diagonal && j) lineGrider(j + 3);
     if (diagonal && j) lineGrider(j + 6);
+}
+function opponentCounterMove(i, j, diagonal) {
+    console.log("Counter Move");
+    console.log(i, j, diagonal);
+    if (!diagonal && i) {
+        i--;
+        for (let j = 0; j < 3; j++) {
+            console.log(i, j);
+            if (XOMatrix[i][j] == "-") {
+                console.log("IN");
+                XOMatrix[i][j] == opponentXO;
+                console.log(XOMatrix[i][j]);
+            }
+        }
+        for (let k in XOBlocks)
+            XOBlocks[k].textContent =
+                XOMatrix[Math.floor(k / 3)][Math.floor(k % 3)];
+    }
 }
 function lineGrider(num) {
     document.getElementById("win-horizontal-lines").style.display = "grid";
@@ -64,7 +99,7 @@ const root = document.querySelector(":root");
 function changeColor() {
     for (let i = 0; i < 3; i++)
         rgbSaver.push(Math.floor(Math.random() * 226 + 30));
-    console.log(rgbSaver);
+    // console.log(rgbSaver);
     root.style.cssText = `
     --background-color: rgb(${rgbSaver[0]}, ${rgbSaver[1]}, ${rgbSaver[2]});
     --game-color: rgb(${rgbSaver[0] / 2}, ${rgbSaver[1] / 2}, ${
@@ -76,31 +111,33 @@ function changeColor() {
     `;
     for (let i = 0; i < 3; i++) rgbSaver.pop();
 }
-const xBtn = document.getElementById("x-btn");
-xBtn.addEventListener("click", function () {
-    playerXO = "X";
-    xoChoose(xBtn);
-});
-const oBtn = document.getElementById("o-btn");
-oBtn.addEventListener("click", function () {
-    playerXO = "O";
-    xoChoose(oBtn);
-});
-const chooseXOPage = document.getElementById("choose-xo");
-function xoChoose(XO) {
-    XO.style.opacity = 0.5;
-    XO.style.transform = "translate(0, 4px)";
-    XO.style.boxShadow = "0px 1px 5px var(--lineColor)";
-    chooseXOPage.style.opacity = "1";
+// const xBtn = document.getElementById("x-btn");
+// xBtn.addEventListener("click", function () {
+//     playerXO = "X";
+//     opponentXO = "O";
+//     xoChoose(xBtn);
+// });
+// const oBtn = document.getElementById("o-btn");
+// oBtn.addEventListener("click", function () {
+//     playerXO = "O";
+//     opponentXO = "X";
+//     xoChoose(oBtn);
+// });
+// const chooseXOPage = document.getElementById("choose-xo");
+// function xoChoose(XO) {
+//     XO.style.opacity = 0.5;
+//     XO.style.transform = "translate(0, 4px)";
+//     XO.style.boxShadow = "0px 1px 5px var(--lineColor)";
+//     chooseXOPage.style.opacity = "1";
 
-    chooseXOPage.style.opacity = "0";
-    setTimeout(() => {
-        chooseXOPage.style.display = "none";
-    }, 650);
-}
-setTimeout(() => {
-    document.getElementsByTagName("body")[0].style.transition = "0.7s";
-    chooseXOPage.style.transition = "0.5s 0.3s";
-    xBtn.style.transition = "0.2s";
-    oBtn.style.transition = "0.2s";
-}, 100);
+//     chooseXOPage.style.opacity = "0";
+//     setTimeout(() => {
+//         chooseXOPage.style.display = "none";
+//     }, 650);
+// }
+// setTimeout(() => {
+//     document.getElementsByTagName("body")[0].style.transition = "0.7s";
+//     chooseXOPage.style.transition = "0.5s 0.3s";
+//     xBtn.style.transition = "0.2s";
+//     oBtn.style.transition = "0.2s";
+// }, 100);
