@@ -15,25 +15,38 @@ for (let i in XOBlocks) {
             XOMatrix[Math.floor(i / 3)][Math.floor(i % 3)] = playerXO;
             changeColor();
             console.log("----------");
-            if (!lineChecker(playerXO, 3, endGame)) {
+            if (!lineFinder(playerXO, 3, endGame)) {
                 // console.log("STEP 2:")
                 possibleOpponentPlace = [];
-                if (lineChecker(playerXO, 2, opponentCounterMove)) {
-                    console.log(possibleOpponentPlace);
-                    randomPlace =
-                        possibleOpponentPlace[
-                            Math.floor(
-                                Math.random() * possibleOpponentPlace.length
-                            )
-                        ];
-                    console.log("randomPlace", randomPlace);
-                    if (randomPlace) {
-                        XOMatrix[randomPlace[0]][randomPlace[1]] = opponentXO;
+                if (lineFinder(opponentXO, 2, blockFinder)) {
+                    console.log("Win Move");
+                } else if (lineFinder(playerXO, 2, blockFinder)) {
+                    console.log("Counter Move");
+                } else {
+                    console.log("Random Move");
+                    // console.log(XOMatrix.join("\n"));
+                    for (let i = 0; i < 3; i++) {
+                        for (let j = 0; j < 3; j++) {
+                            if (!XOMatrix[i][j]) {
+                                possibleOpponentPlace.push([i, j]);
+                            }
+                        }
                     }
-                    for (let k in XOBlocks)
-                        XOBlocks[k].textContent =
-                            XOMatrix[Math.floor(k / 3)][Math.floor(k % 3)];
-                    cursorDefaulter();
+                }
+                randomPlace =
+                    possibleOpponentPlace[
+                        Math.floor(Math.random() * possibleOpponentPlace.length)
+                    ];
+                // console.log("randomPlace", randomPlace);
+                if (randomPlace) {
+                    XOMatrix[randomPlace[0]][randomPlace[1]] = opponentXO;
+                }
+                for (let k in XOBlocks) {
+                    XOBlocks[k].textContent =
+                        XOMatrix[Math.floor(k / 3)][Math.floor(k % 3)];
+                }
+                cursorDefaulter();
+                if (lineFinder(opponentXO, 3, endGame)) {
                 }
             }
             console.log("==========");
@@ -47,15 +60,15 @@ function cursorDefaulter() {
         }
     }
 }
-function lineChecker(ckeckFor, countTo, endGameOrCounterMove) {
+function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
+    // console.log(XOMatrix.join("\n"));
     let inlineCounter;
     let outputFunction;
     for (let i = 0; i < 3; i++) {
         inlineCounter = 0;
         for (let j = 0; j < 3; j++) {
-            if (XOMatrix[i][j] == ckeckFor) {
-                inlineCounter++;
-            }
+            if (XOMatrix[i][j] == ckeckFor) inlineCounter++;
+            else if(XOMatrix[i][j]) inlineCounter--;
         }
         if (inlineCounter == countTo) {
             endGameOrCounterMove(i + 1, false, false);
@@ -65,9 +78,8 @@ function lineChecker(ckeckFor, countTo, endGameOrCounterMove) {
     for (let i = 0; i < 3; i++) {
         inlineCounter = 0;
         for (let j = 0; j < 3; j++) {
-            if (XOMatrix[j][i] == ckeckFor) {
-                inlineCounter++;
-            }
+            if (XOMatrix[j][i] == ckeckFor) inlineCounter++;
+            else if(XOMatrix[j][i]) inlineCounter--;
         }
         if (inlineCounter == countTo) {
             endGameOrCounterMove(false, i + 1, false);
@@ -76,9 +88,8 @@ function lineChecker(ckeckFor, countTo, endGameOrCounterMove) {
     }
     inlineCounter = 0;
     for (let i = 0; i < 3; i++) {
-        if (XOMatrix[i][i] == ckeckFor) {
-            inlineCounter++;
-        }
+        if (XOMatrix[i][i] == ckeckFor) inlineCounter++;
+        else if(XOMatrix[i][i]) inlineCounter--;
     }
     if (inlineCounter == countTo) {
         endGameOrCounterMove(false, 1, true);
@@ -87,9 +98,8 @@ function lineChecker(ckeckFor, countTo, endGameOrCounterMove) {
     inlineCounter = 0;
     let j = 2;
     for (let i = 0; i < 3; i++) {
-        if (XOMatrix[i][j--] == ckeckFor) {
-            inlineCounter++;
-        }
+        if (XOMatrix[i][j--] == ckeckFor) inlineCounter++;
+        else if(XOMatrix[i][j+1]) inlineCounter--;
     }
     if (inlineCounter == countTo) {
         endGameOrCounterMove(false, 2, true);
@@ -104,16 +114,13 @@ function endGame(i, j, diagonal) {
     if (!diagonal && j) lineGrider(j + 3);
     if (diagonal && j) lineGrider(j + 6);
 }
-function opponentCounterMove(i, j, diagonal) {
-    console.log("Counter Move");
+function blockFinder(i, j, diagonal) {
     // console.log(i, j, diagonal);
     if (!diagonal && i) {
         i--;
         for (let j = 0; j < 3; j++) {
             if (!XOMatrix[i][j]) {
-                // XOMatrix[i][j] = opponentXO;
                 possibleOpponentPlace.push([i, j]);
-                // return;
             }
         }
     }
@@ -121,9 +128,7 @@ function opponentCounterMove(i, j, diagonal) {
         j--;
         for (let i = 0; i < 3; i++) {
             if (!XOMatrix[i][j]) {
-                // XOMatrix[i][j] = opponentXO;
                 possibleOpponentPlace.push([i, j]);
-                // return;
             }
         }
     }
@@ -132,9 +137,7 @@ function opponentCounterMove(i, j, diagonal) {
             case 1:
                 for (let i = 0; i < 3; i++) {
                     if (!XOMatrix[i][i]) {
-                        // XOMatrix[i][i] = opponentXO;
                         possibleOpponentPlace.push([i, i]);
-                        // return;
                     }
                 }
                 break;
@@ -143,9 +146,7 @@ function opponentCounterMove(i, j, diagonal) {
                 for (let i = 0; i < 3; i++) {
                     k--;
                     if (!XOMatrix[i][k]) {
-                        // XOMatrix[i][k] = opponentXO;
                         possibleOpponentPlace.push([i, k]);
-                        // return;
                     }
                 }
         }
