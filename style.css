@@ -53,7 +53,6 @@ hr {
     background: red;
     margin: auto;
     opacity: 0;
-    transition: 1s;
 }
 #win-horizontal-lines,
 #win-vertical-lines,
@@ -79,7 +78,7 @@ hr {
     top: -200%;
 }
 #win-vertical-lines hr {
-    width: 8px;
+    width: 1.2vh;
     height: 100%;
 }
 #win-diagonal-lines {
@@ -89,7 +88,7 @@ hr {
 #win-diagonal-lines hr {
     position: absolute;
     width: 90vh;
-    height: 8px;
+    height: 1.2vh;
     top: 50%;
     left: 50%;
 }
@@ -99,9 +98,10 @@ hr {
 #win-diagonal-lines hr:nth-child(2) {
     transform: translate(-50%, -50%) rotate(-45deg);
 }
-#choose-xo {
+#choose-xo,
+#setting-menu {
     position: absolute;
-    border: 3px solid rebeccapurple;
+    /* border: 3px solid rebeccapurple; */
     background: var(--background-color);
     width: 70vh;
     height: 70vh;
@@ -147,4 +147,45 @@ span {
     background: transparent;
     position: absolute;
     display: none;
+}
+svg {
+    position: absolute;
+    top: 1vh;
+    right: 2vh;
+    cursor: pointer;
+    width: 7vh;
+    height: 7vh;
+}
+svg:hover {
+    transition: 500ms;
+    transform: rotate(180deg);
+}
+#setting-menu {
+    /* display: grid; */
+    opacity: 0;
+    display: none;
+    padding: 2vh;
+    font-size: 3vh;
+    font-family: sans-serif;
+}
+#setting-menu div {
+    border: 1px solid var(--lineColor);
+    transition: 0.5s;
+    padding: 1.5vh;
+    border-radius: 7px;
+    color: var(--lineColor);
+}
+#setting-menu div:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 10px var(--game-color);
+    background: var(--game-color);
+    color: var(--background-color);
+}
+#setting-menu div p {
+    margin-bottom: 1vh;
+    font-weight: 600;
+}
+input {
+    transform: scale(1.5);
+    margin: 1vh;
 }

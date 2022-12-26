@@ -1,10 +1,16 @@
 const XOBlocks = Array.from(document.querySelectorAll("#lines div"));
 const disableClick = document.getElementById("disable-click");
-let playerXO = "X"; //temp
-let opponentXO = "O"; //temp
+let playerXO = "X";
+let opponentXO = "O";
 let debugOutput = "";
 let possibleOpponentPlace = [];
 let roundNO = 0;
+let hardGameMode = true;
+let askXO = true;
+let gameMode = "default";
+let pageColorChange = true;
+let showChallenges = false;
+let showDebug = true;
 let XOMatrix = [
     ["", "", ""],
     ["", "", ""],
@@ -20,48 +26,70 @@ for (let i in XOBlocks) {
             if (!lineFinder(playerXO, 3, endGame)) {
                 possibleOpponentPlace = [];
                 debugOutput = "Round " + ++roundNO + " =>";
-                if (lineFinder(opponentXO, 2, blockFinder)) {
-                    debugOutput += " Win Move";
-                } else if (lineFinder(playerXO, 2, blockFinder)) {
-                    debugOutput += " Counter Move";
-                } else {
-                    debugOutput += " Random Move";
-                    for (let i = 0; i < 3; i++) {
-                        for (let j = 0; j < 3; j++) {
-                            if (!XOMatrix[i][j]) {
-                                possibleOpponentPlace.push([i, j]);
+                if (gameMode != "only-player") {
+                    if (hardGameMode) {
+                        if (lineFinder(opponentXO, 2, blockFinder)) {
+                            debugOutput += " Win Move";
+                        } else if (lineFinder(playerXO, 2, blockFinder)) {
+                            debugOutput += " Counter Move";
+                        } else {
+                            randomMoveOpponent();
+                        }
+                    } else {
+                        randomMoveOpponent();
+                    }
+                    if (gameMode != "unbeatable-mode") {
+                        randomPlace =
+                            possibleOpponentPlace[
+                                Math.floor(
+                                    Math.random() * possibleOpponentPlace.length
+                                )
+                            ];
+                        if (randomPlace) {
+                            XOMatrix[randomPlace[0]][randomPlace[1]] =
+                                opponentXO;
+                        }
+                    } else {
+                        for (let i of possibleOpponentPlace) {
+                            XOMatrix[i[0]][i[1]] = opponentXO;
+                        }
+                    }
+                    disableClick.style.display = "block";
+                    setTimeout(() => {
+                        for (let k in XOBlocks) {
+                            XOBlocks[k].textContent =
+                                XOMatrix[Math.floor(k / 3)][Math.floor(k % 3)];
+                        }
+                        for (let i = 0; i < 3; i++) {
+                            for (let j = 0; j < 3; j++) {
+                                if (XOMatrix[i][j])
+                                    XOBlocks[3 * i + j].style.cursor =
+                                        "default";
                             }
                         }
-                    }
-                }
-                randomPlace =
-                    possibleOpponentPlace[
-                        Math.floor(Math.random() * possibleOpponentPlace.length)
-                    ];
-                if (randomPlace) {
-                    XOMatrix[randomPlace[0]][randomPlace[1]] = opponentXO;
-                }
-                disableClick.style.display = "block";
-                setTimeout(() => {
-                    for (let k in XOBlocks) {
-                        XOBlocks[k].textContent =
-                            XOMatrix[Math.floor(k / 3)][Math.floor(k % 3)];
-                    }
-                    for (let i = 0; i < 3; i++) {
-                        for (let j = 0; j < 3; j++) {
-                            if (XOMatrix[i][j])
-                                XOBlocks[3 * i + j].style.cursor = "default";
+                        if (lineFinder(opponentXO, 3, endGame)) {
                         }
-                    }
-                    if (lineFinder(opponentXO, 3, endGame)) {
-                    }
-                    changeColor();
-                    disableClick.style.display = "none";
-                }, 900);
-                console.log(debugOutput);
+                        changeColor();
+                        disableClick.style.display = "none";
+                    }, 900);
+                } else {
+                    debugOutput += " Zzz";
+                }
+                if (showDebug) console.log(debugOutput);
             }
         }
     });
+}
+function randomMoveOpponent() {
+    if (gameMode == "unbeatable-mode") return;
+    debugOutput += " Random Move";
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (!XOMatrix[i][j]) {
+                possibleOpponentPlace.push([i, j]);
+            }
+        }
+    }
 }
 function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
     let inlineCounter = 0;
@@ -162,6 +190,7 @@ function lineGrider(num) {
 let rgbSaver = [];
 const root = document.querySelector(":root");
 function changeColor() {
+    if (!pageColorChange) return;
     for (let i = 0; i < 3; i++)
         rgbSaver.push(Math.floor(Math.random() * 226 + 30));
     root.style.cssText = `
@@ -175,33 +204,99 @@ function changeColor() {
     `;
     rgbSaver = [];
 }
-// const xBtn = document.getElementById("x-btn");
-// xBtn.addEventListener("click", function () {
-//     playerXO = "X";
-//     opponentXO = "O";
-//     xoChoose(xBtn);
-// });
-// const oBtn = document.getElementById("o-btn");
-// oBtn.addEventListener("click", function () {
-//     playerXO = "O";
-//     opponentXO = "X";
-//     xoChoose(oBtn);
-// });
-// const chooseXOPage = document.getElementById("choose-xo");
-// function xoChoose(XO) {
-//     XO.style.opacity = 0.5;
-//     XO.style.transform = "translate(0, 4px)";
-//     XO.style.boxShadow = "0px 1px 5px var(--lineColor)";
-//     chooseXOPage.style.opacity = "1";
+const chooseXOPage = document.getElementById("choose-xo");
+if (askXO) {
+    chooseXOPage.style.display = "flex";
+    const xBtn = document.getElementById("x-btn");
+    xBtn.addEventListener("click", function () {
+        playerXO = "X";
+        opponentXO = "O";
+        xoChoose(xBtn);
+    });
+    const oBtn = document.getElementById("o-btn");
+    oBtn.addEventListener("click", function () {
+        playerXO = "O";
+        opponentXO = "X";
+        xoChoose(oBtn);
+    });
 
-//     chooseXOPage.style.opacity = "0";
-//     setTimeout(() => {
-//         chooseXOPage.style.display = "none";
-//     }, 650);
-// }
-// setTimeout(() => {
-//     document.getElementsByTagName("body")[0].style.transition = "0.7s";
-//     chooseXOPage.style.transition = "0.5s 0.3s";
-//     xBtn.style.transition = "0.2s";
-//     oBtn.style.transition = "0.2s";
-// }, 100);
+    function xoChoose(XO) {
+        XO.style.opacity = 0.5;
+        XO.style.transform = "translate(0, 4px)";
+        XO.style.boxShadow = "0px 1px 5px var(--lineColor)";
+        chooseXOPage.style.opacity = "1";
+
+        chooseXOPage.style.opacity = "0";
+        setTimeout(() => {
+            chooseXOPage.style.display = "none";
+        }, 650);
+    }
+    setTimeout(() => {
+        document.getElementsByTagName("body")[0].style.transition = "0.7s";
+        chooseXOPage.style.transition = "0.5s 0.3s";
+        xBtn.style.transition = "0.2s";
+        oBtn.style.transition = "0.2s";
+    }, 100);
+} else {
+    chooseXOPage.style.display = "none";
+}
+
+let settingClicked = 0;
+settingMenu = document.getElementById("setting-menu");
+document.getElementById("setting-btn").addEventListener("click", function () {
+    if (settingClicked++ % 2 == 0) {
+        settingMenu.style.transition = "0.3s";
+        settingMenu.style.display = "grid";
+        setTimeout(() => {
+            settingMenu.style.opacity = "1";
+        }, 0);
+    } else {
+        setTimeout(() => {
+            settingMenu.style.display = "none";
+        }, 300);
+        settingMenu.style.opacity = "0";
+    }
+});
+document
+    .getElementById("easy-difficulty")
+    .addEventListener("click", function () {
+        hardGameMode = false;
+    });
+document
+    .getElementById("hard-difficulty")
+    .addEventListener("click", function () {
+        hardGameMode = true;
+    });
+document.getElementById("ask-xo").addEventListener("click", function () {
+    if (document.getElementById("ask-xo").checked) {
+        askXO = true;
+    } else askXO = false;
+});
+document
+    .getElementById("only-player-mode-inp")
+    .addEventListener("click", function () {
+        gameMode = "only-player";
+    });
+document
+    .getElementById("Unbeatable-mode-inp")
+    .addEventListener("click", function () {
+        gameMode = "unbeatable-mode";
+    });
+document
+    .getElementById("default-mode-inp")
+    .addEventListener("click", function () {
+        gameMode = "default";
+    });
+document
+    .getElementById("change-color-inp")
+    .addEventListener("click", function () {
+        if (document.getElementById("change-color-inp").checked) {
+            pageColorChange = true;
+        } else pageColorChange = false;
+    });
+document.getElementById("debug-inp").addEventListener("click", function () {
+    if (document.getElementById("debug-inp").checked) {
+        showDebug = true;
+    } else showDebug = false;
+});
+// localStorage.clear();
