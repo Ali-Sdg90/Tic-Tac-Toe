@@ -2,9 +2,9 @@ const XOBlocks = Array.from(document.querySelectorAll("#lines div"));
 let playerXO = "X"; //temp
 let opponentXO = "O"; //temp
 let XOMatrix = [
-    ["","",""],
-    ["","",""],
-    ["","",""],
+    ["", "", ""],
+    ["", "", ""],
+    ["", "", ""],
 ];
 let possibleOpponentPlace = [];
 for (let i in XOBlocks) {
@@ -17,6 +17,7 @@ for (let i in XOBlocks) {
             changeColor();
             console.log("----------");
             if (!lineChecker(playerXO, 3, endGame)) {
+                console.log("STEP 2:")
                 possibleOpponentPlace = [];
                 if (lineChecker(playerXO, 2, opponentCounterMove)) {
                     for (let k in XOBlocks)
@@ -38,32 +39,43 @@ function cursorDefaulter() {
     }
 }
 function lineChecker(ckeckFor, countTo, endGameOrCounterMove) {
-    console.log(XOMatrix)
+    console.log(XOMatrix);
     let inlineCounter;
     let outputFunction;
     for (let i = 0; i < 3; i++) {
         inlineCounter = 0;
         for (let j = 0; j < 3; j++) {
-            if (XOMatrix[i][j] == ckeckFor) inlineCounter++;
+            if (XOMatrix[i][j] == ckeckFor) {
+                console.log(ckeckFor, i, j);
+                inlineCounter++;
+            }
         }
         if (inlineCounter == countTo) {
-            endGameOrCounterMove(++i, false, false);
+            // console.log(ckeckFor, i, j);
+            endGameOrCounterMove(i+1, false, false);
             outputFunction = true;
         }
+        console.log("NO")
     }
     for (let i = 0; i < 3; i++) {
         inlineCounter = 0;
         for (let j = 0; j < 3; j++) {
-            if (XOMatrix[j][i] == ckeckFor) inlineCounter++;
+            if (XOMatrix[j][i] == ckeckFor) {
+                console.log(ckeckFor, j, i);
+                inlineCounter++;
+            }
         }
         if (inlineCounter == countTo) {
-            endGameOrCounterMove(false, ++i, false);
+            endGameOrCounterMove(false, i+1, false);
             outputFunction = true;
         }
     }
     inlineCounter = 0;
     for (let i = 0; i < 3; i++) {
-        if (XOMatrix[i][i] == ckeckFor) inlineCounter++;
+        if (XOMatrix[i][i] == ckeckFor) {
+            console.log(ckeckFor, i, i);
+            inlineCounter++;
+        }
     }
     if (inlineCounter == countTo) {
         endGameOrCounterMove(false, 1, true);
@@ -72,7 +84,10 @@ function lineChecker(ckeckFor, countTo, endGameOrCounterMove) {
     inlineCounter = 0;
     let j = 2;
     for (let i = 0; i < 3; i++) {
-        if (XOMatrix[i][j--] == ckeckFor) inlineCounter++;
+        if (XOMatrix[i][j--] == ckeckFor) {
+            console.log(ckeckFor, i, j+1);
+            inlineCounter++;
+        }
     }
     if (inlineCounter == countTo) {
         endGameOrCounterMove(false, 2, true);
