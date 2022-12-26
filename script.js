@@ -1,12 +1,15 @@
 const XOBlocks = Array.from(document.querySelectorAll("#lines div"));
+const disableClick = document.getElementById("disable-click");
 let playerXO = "X"; //temp
 let opponentXO = "O"; //temp
+let debugOutput = "";
+let possibleOpponentPlace = [];
+let roundNO = 0;
 let XOMatrix = [
     ["", "", ""],
     ["", "", ""],
     ["", "", ""],
 ];
-let possibleOpponentPlace = [];
 for (let i in XOBlocks) {
     XOBlocks[i].addEventListener("click", function () {
         if (!XOBlocks[i].textContent) {
@@ -14,17 +17,15 @@ for (let i in XOBlocks) {
             XOBlocks[i].style.cursor = "default";
             XOMatrix[Math.floor(i / 3)][Math.floor(i % 3)] = playerXO;
             changeColor();
-            console.log("----------");
             if (!lineFinder(playerXO, 3, endGame)) {
-                // console.log("STEP 2:")
                 possibleOpponentPlace = [];
+                debugOutput = "Round " + ++roundNO + " =>";
                 if (lineFinder(opponentXO, 2, blockFinder)) {
-                    console.log("Win Move");
+                    debugOutput += " Win Move";
                 } else if (lineFinder(playerXO, 2, blockFinder)) {
-                    console.log("Counter Move");
+                    debugOutput += " Counter Move";
                 } else {
-                    console.log("Random Move");
-                    // console.log(XOMatrix.join("\n"));
+                    debugOutput += " Random Move";
                     for (let i = 0; i < 3; i++) {
                         for (let j = 0; j < 3; j++) {
                             if (!XOMatrix[i][j]) {
@@ -37,38 +38,39 @@ for (let i in XOBlocks) {
                     possibleOpponentPlace[
                         Math.floor(Math.random() * possibleOpponentPlace.length)
                     ];
-                // console.log("randomPlace", randomPlace);
                 if (randomPlace) {
                     XOMatrix[randomPlace[0]][randomPlace[1]] = opponentXO;
                 }
-                for (let k in XOBlocks) {
-                    XOBlocks[k].textContent =
-                        XOMatrix[Math.floor(k / 3)][Math.floor(k % 3)];
-                }
-                cursorDefaulter();
-                if (lineFinder(opponentXO, 3, endGame)) {
-                }
+                disableClick.style.display = "block";
+                setTimeout(() => {
+                    for (let k in XOBlocks) {
+                        XOBlocks[k].textContent =
+                            XOMatrix[Math.floor(k / 3)][Math.floor(k % 3)];
+                    }
+                    for (let i = 0; i < 3; i++) {
+                        for (let j = 0; j < 3; j++) {
+                            if (XOMatrix[i][j])
+                                XOBlocks[3 * i + j].style.cursor = "default";
+                        }
+                    }
+                    if (lineFinder(opponentXO, 3, endGame)) {
+                    }
+                    changeColor();
+                    disableClick.style.display = "none";
+                }, 900);
+                console.log(debugOutput);
             }
-            console.log("==========");
         }
     });
 }
-function cursorDefaulter() {
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-            if (XOMatrix[i][j]) XOBlocks[3 * i + j].style.cursor = "default";
-        }
-    }
-}
 function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
-    // console.log(XOMatrix.join("\n"));
-    let inlineCounter;
-    let outputFunction;
+    let inlineCounter = 0;
+    let outputFunction = false;
     for (let i = 0; i < 3; i++) {
         inlineCounter = 0;
         for (let j = 0; j < 3; j++) {
             if (XOMatrix[i][j] == ckeckFor) inlineCounter++;
-            else if(XOMatrix[i][j]) inlineCounter--;
+            else if (XOMatrix[i][j]) inlineCounter--;
         }
         if (inlineCounter == countTo) {
             endGameOrCounterMove(i + 1, false, false);
@@ -79,7 +81,7 @@ function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
         inlineCounter = 0;
         for (let j = 0; j < 3; j++) {
             if (XOMatrix[j][i] == ckeckFor) inlineCounter++;
-            else if(XOMatrix[j][i]) inlineCounter--;
+            else if (XOMatrix[j][i]) inlineCounter--;
         }
         if (inlineCounter == countTo) {
             endGameOrCounterMove(false, i + 1, false);
@@ -89,7 +91,7 @@ function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
     inlineCounter = 0;
     for (let i = 0; i < 3; i++) {
         if (XOMatrix[i][i] == ckeckFor) inlineCounter++;
-        else if(XOMatrix[i][i]) inlineCounter--;
+        else if (XOMatrix[i][i]) inlineCounter--;
     }
     if (inlineCounter == countTo) {
         endGameOrCounterMove(false, 1, true);
@@ -99,7 +101,7 @@ function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
     let j = 2;
     for (let i = 0; i < 3; i++) {
         if (XOMatrix[i][j--] == ckeckFor) inlineCounter++;
-        else if(XOMatrix[i][j+1]) inlineCounter--;
+        else if (XOMatrix[i][j + 1]) inlineCounter--;
     }
     if (inlineCounter == countTo) {
         endGameOrCounterMove(false, 2, true);
@@ -109,13 +111,12 @@ function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
     return false;
 }
 function endGame(i, j, diagonal) {
-    console.log("Game Over");
+    console.log("-- Game Over --");
     if (!diagonal && i) lineGrider(i);
     if (!diagonal && j) lineGrider(j + 3);
     if (diagonal && j) lineGrider(j + 6);
 }
 function blockFinder(i, j, diagonal) {
-    // console.log(i, j, diagonal);
     if (!diagonal && i) {
         i--;
         for (let j = 0; j < 3; j++) {
@@ -172,7 +173,7 @@ function changeColor() {
         rgbSaver[2] / 3
     });
     `;
-    for (let i = 0; i < 3; i++) rgbSaver.pop();
+    rgbSaver = [];
 }
 // const xBtn = document.getElementById("x-btn");
 // xBtn.addEventListener("click", function () {
