@@ -155,10 +155,7 @@ svg {
     cursor: pointer;
     width: 7vh;
     height: 7vh;
-}
-svg:hover {
     transition: 500ms;
-    transform: rotate(180deg);
 }
 #setting-menu {
     /* display: grid; */

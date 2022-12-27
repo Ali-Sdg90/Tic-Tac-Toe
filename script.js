@@ -16,6 +16,42 @@ let XOMatrix = [
     ["", "", ""],
     ["", "", ""],
 ];
+
+if (localStorage.getItem("XO-Setting")) {
+    let localSettingObj = JSON.parse(localStorage.getItem("XO-Setting"));
+    hardGameMode = localSettingObj.hardGameModeSave;
+    askXO = localSettingObj.askXOSave;
+    gameMode = localSettingObj.gameModeSave;
+    pageColorChange = localSettingObj.pageColorChangeSave;
+    showChallenges = localSettingObj.showChallengesSave;
+    showDebug = localSettingObj.showDebugSave;
+}
+if (hardGameMode) document.getElementById("hard-difficulty").checked = true;
+else document.getElementById("easy-difficulty").checked = true;
+
+if (askXO) document.getElementById("ask-xo").checked = true;
+else document.getElementById("ask-xo").checked = false;
+
+switch (gameMode) {
+    case "only-player":
+        document.getElementById("only-player-mode-inp").checked = true;
+        break;
+    case "unbeatable-mode":
+        document.getElementById("Unbeatable-mode-inp").checked = true;
+        break;
+    case "default":
+        document.getElementById("default-mode-inp").checked = true;
+        break;
+}
+
+if (pageColorChange) document.getElementById("change-color-inp").checked = true;
+else document.getElementById("change-color-inp").checked = false;
+
+if (showChallenges) document.getElementById("challenges-inp").checked = true;
+else document.getElementById("challenges-inp").checked = false;
+
+if (showDebug) document.getElementById("debug-inp").checked = true;
+else document.getElementById("debug-inp").checked = false;
 for (let i in XOBlocks) {
     XOBlocks[i].addEventListener("click", function () {
         if (!XOBlocks[i].textContent) {
@@ -81,8 +117,12 @@ for (let i in XOBlocks) {
     });
 }
 function randomMoveOpponent() {
-    if (gameMode == "unbeatable-mode") return;
-    debugOutput += " Random Move";
+    if (gameMode == "unbeatable-mode" && hardGameMode) {
+        debugOutput += " You can play again :)";
+        return;
+    } else if (gameMode == "unbeatable-mode" && !hardGameMode) {
+        debugOutput += " EZ :)";
+    } else debugOutput += " Random Move";
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
             if (!XOMatrix[i][j]) {
@@ -256,36 +296,45 @@ document.getElementById("setting-btn").addEventListener("click", function () {
         }, 300);
         settingMenu.style.opacity = "0";
     }
+    document.getElementById("setting-btn").style.transform = `rotate(${
+        settingClicked * -90
+    }deg)`;
 });
 document
     .getElementById("easy-difficulty")
     .addEventListener("click", function () {
         hardGameMode = false;
+        localStorage.setItem("XO-Setting", saveSetting());
     });
 document
     .getElementById("hard-difficulty")
     .addEventListener("click", function () {
         hardGameMode = true;
+        localStorage.setItem("XO-Setting", saveSetting());
     });
 document.getElementById("ask-xo").addEventListener("click", function () {
     if (document.getElementById("ask-xo").checked) {
         askXO = true;
     } else askXO = false;
+    localStorage.setItem("XO-Setting", saveSetting());
 });
 document
     .getElementById("only-player-mode-inp")
     .addEventListener("click", function () {
         gameMode = "only-player";
+        localStorage.setItem("XO-Setting", saveSetting());
     });
 document
     .getElementById("Unbeatable-mode-inp")
     .addEventListener("click", function () {
         gameMode = "unbeatable-mode";
+        localStorage.setItem("XO-Setting", saveSetting());
     });
 document
     .getElementById("default-mode-inp")
     .addEventListener("click", function () {
         gameMode = "default";
+        localStorage.setItem("XO-Setting", saveSetting());
     });
 document
     .getElementById("change-color-inp")
@@ -293,10 +342,24 @@ document
         if (document.getElementById("change-color-inp").checked) {
             pageColorChange = true;
         } else pageColorChange = false;
+        localStorage.setItem("XO-Setting", saveSetting());
     });
 document.getElementById("debug-inp").addEventListener("click", function () {
     if (document.getElementById("debug-inp").checked) {
         showDebug = true;
     } else showDebug = false;
+    localStorage.setItem("XO-Setting", saveSetting());
 });
 // localStorage.clear();
+
+function saveSetting() {
+    let saveObj = {
+        hardGameModeSave: hardGameMode,
+        askXOSave: askXO,
+        gameModeSave: gameMode,
+        pageColorChangeSave: pageColorChange,
+        showChallengesSave: showChallenges,
+        showDebugSave: showDebug,
+    };
+    return JSON.stringify(saveObj);
+}
