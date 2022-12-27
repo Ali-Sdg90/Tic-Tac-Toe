@@ -11,7 +11,6 @@
 }
 body {
     background: var(--background-color);
-    transition: none;
 }
 body {
     display: flex;
@@ -44,7 +43,6 @@ body {
     cursor: pointer;
     color: var(--game-color);
     overflow: hidden;
-    transition: background 0.7s, color 0.7s;
 }
 hr {
     background: var(--lineColor);
@@ -101,7 +99,6 @@ hr {
 #choose-xo,
 #setting-menu {
     position: absolute;
-    /* border: 3px solid rebeccapurple; */
     background: var(--background-color);
     width: 70vh;
     height: 70vh;
@@ -114,7 +111,7 @@ hr {
 #choose-xo-div {
     border: 1px solid black;
     background: var(--game-color);
-    color: var(--lineColor);
+    color: var(--background-color);
     border-radius: 5px;
     padding: 5vh 1.5vh;
 }
@@ -137,6 +134,7 @@ span {
     cursor: pointer;
     box-shadow: 0px 5px 5px var(--lineColor);
     transition: none;
+    color: var(--lineColor);
 }
 #xo-btns div:hover {
     opacity: 0.8;
@@ -155,7 +153,6 @@ svg {
     cursor: pointer;
     width: 7vh;
     height: 7vh;
-    transition: 500ms;
 }
 #setting-menu {
     /* display: grid; */

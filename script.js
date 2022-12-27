@@ -26,12 +26,11 @@ if (localStorage.getItem("XO-Setting")) {
     showChallenges = localSettingObj.showChallengesSave;
     showDebug = localSettingObj.showDebugSave;
 }
+
 if (hardGameMode) document.getElementById("hard-difficulty").checked = true;
 else document.getElementById("easy-difficulty").checked = true;
-
 if (askXO) document.getElementById("ask-xo").checked = true;
 else document.getElementById("ask-xo").checked = false;
-
 switch (gameMode) {
     case "only-player":
         document.getElementById("only-player-mode-inp").checked = true;
@@ -43,15 +42,13 @@ switch (gameMode) {
         document.getElementById("default-mode-inp").checked = true;
         break;
 }
-
 if (pageColorChange) document.getElementById("change-color-inp").checked = true;
 else document.getElementById("change-color-inp").checked = false;
-
 if (showChallenges) document.getElementById("challenges-inp").checked = true;
 else document.getElementById("challenges-inp").checked = false;
-
 if (showDebug) document.getElementById("debug-inp").checked = true;
 else document.getElementById("debug-inp").checked = false;
+
 for (let i in XOBlocks) {
     XOBlocks[i].addEventListener("click", function () {
         if (!XOBlocks[i].textContent) {
@@ -229,6 +226,7 @@ function lineGrider(num) {
 }
 let rgbSaver = [];
 const root = document.querySelector(":root");
+changeColor();
 function changeColor() {
     if (!pageColorChange) return;
     for (let i = 0; i < 3; i++)
@@ -245,15 +243,15 @@ function changeColor() {
     rgbSaver = [];
 }
 const chooseXOPage = document.getElementById("choose-xo");
+const xBtn = document.getElementById("x-btn");
+const oBtn = document.getElementById("o-btn");
 if (askXO) {
     chooseXOPage.style.display = "flex";
-    const xBtn = document.getElementById("x-btn");
     xBtn.addEventListener("click", function () {
         playerXO = "X";
         opponentXO = "O";
         xoChoose(xBtn);
     });
-    const oBtn = document.getElementById("o-btn");
     oBtn.addEventListener("click", function () {
         playerXO = "O";
         opponentXO = "X";
@@ -264,22 +262,25 @@ if (askXO) {
         XO.style.opacity = 0.5;
         XO.style.transform = "translate(0, 4px)";
         XO.style.boxShadow = "0px 1px 5px var(--lineColor)";
-        chooseXOPage.style.opacity = "1";
-
         chooseXOPage.style.opacity = "0";
         setTimeout(() => {
             chooseXOPage.style.display = "none";
         }, 650);
     }
-    setTimeout(() => {
-        document.getElementsByTagName("body")[0].style.transition = "0.7s";
-        chooseXOPage.style.transition = "0.5s 0.3s";
-        xBtn.style.transition = "0.2s";
-        oBtn.style.transition = "0.2s";
-    }, 100);
 } else {
     chooseXOPage.style.display = "none";
 }
+
+setTimeout(() => {
+    document.getElementsByTagName("body")[0].style.transition = "0.7s";
+    chooseXOPage.style.transition = "0.5s 0.3s";
+    XOBlocks.forEach(function (block) {
+        block.style.transition = "background 0.7s, color 0.7s";
+    });
+    document.getElementById("setting-btn").style.transition = "500ms";
+    xBtn.style.transition = "0.2s";
+    oBtn.style.transition = "0.2s";
+}, 100);
 
 let settingClicked = 0;
 settingMenu = document.getElementById("setting-menu");
