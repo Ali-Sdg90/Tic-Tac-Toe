@@ -9,6 +9,9 @@
     --game-color: rgb(158, 0, 0);
     --lineColor: black;
 }
+::selection {
+    background: transparent;
+}
 body {
     background: var(--background-color);
     display: flex;
@@ -192,19 +195,22 @@ input {
     height: 100%;
     background: black;
     position: absolute;
+    opacity: 1;
     transition: opacity 500ms;
 }
 #end-screen {
     position: absolute;
-    bottom: 4vh;
+    bottom: 3vh;
     font-family: cursive;
     display: flex;
     display: none;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 70vh;
+    width: 73vh;
     overflow: hidden;
+    /* border: 1px solid red; */
+    padding: 2vh 1vh;
 }
 #win-txt,
 #end-game-btns a {
@@ -213,13 +219,15 @@ input {
     text-shadow: 0 0 3px rgb(0, 0, 0);
 }
 #win-txt {
-    box-shadow: 0 3px 10px 2px var(--game-color);
+    box-shadow: inset 0 0 90px -10px var(--background-color),
+        0 0 5px 1px var(--game-color);
     font-size: 5.2vh;
     padding: 2.5vh 7vh;
     border-radius: 10px;
-    width: 32vh;
+    width: 58vh;
     opacity: 0;
     transition: opacity 0.7s;
+    text-align: center;
 }
 #end-game-btns {
     display: flex;
@@ -240,9 +248,10 @@ input {
     font-size: 5vh;
     border-radius: 50%;
     cursor: pointer;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s, transform 0.2, box-shadow 0.2s;
     text-decoration: none;
     padding: 4vh;
+    box-shadow: 0 3px 5px var(--lineColor);
 }
 #end-game-btns a:nth-child(2) {
     font-size: 6vh;
@@ -252,5 +261,6 @@ input {
     opacity: 0.8;
 }
 #end-game-btns a:active {
-    opacity: 0.9;
+    transform: translate(0, 0.25vh);
+    box-shadow: 0 1px 5px var(--lineColor);
 }

@@ -11,6 +11,7 @@ let gameMode = "default";
 let pageColorChange = true;
 let showChallenges = false;
 let showDebug = true;
+let canPlay = true;
 let XOMatrix = [
     ["", "", ""],
     ["", "", ""],
@@ -58,10 +59,17 @@ else document.getElementById("debug-inp").checked = false;
 for (let i in XOBlocks) {
     XOBlocks[i].addEventListener("click", function () {
         if (!XOBlocks[i].textContent) {
-            XOBlocks[i].textContent = playerXO;
-            XOBlocks[i].style.cursor = "default";
-            XOMatrix[Math.floor(i / 3)][Math.floor(i % 3)] = playerXO;
-            changeColor();
+            if (canPlay) {
+                XOBlocks[i].textContent = playerXO;
+                XOBlocks[i].style.cursor = "default";
+                XOMatrix[Math.floor(i / 3)][Math.floor(i % 3)] = playerXO;
+                changeColor();
+            }
+            canPlay = true;
+            if (fullGame()) {
+                endGame();
+                return;
+            }
             if (!lineFinder(playerXO, 3, endGame)) {
                 possibleOpponentPlace = [];
                 debugOutput = "Round " + ++roundNO + " =>";
@@ -107,6 +115,8 @@ for (let i in XOBlocks) {
                             }
                         }
                         if (lineFinder(opponentXO, 3, endGame)) {
+                        } else if (fullGame()) {
+                            endGame();
                         }
                         changeColor();
                         disableClick.style.display = "none";
@@ -194,7 +204,11 @@ function endGame(i, j, diagonal, winner) {
             }, 700);
         }
     });
-    document.getElementById("win-txt").textContent = `${winner} won !`;
+    if (winner) {
+        document.getElementById("win-txt").textContent = `${winner} won !`;
+    } else {
+        document.getElementById("win-txt").textContent = "DRAW !";
+    }
     const xoGame = document.getElementById("xo-game");
     setTimeout(() => {
         xoGame.style.transition = "transform 0.7s";
@@ -280,11 +294,14 @@ if (askXO) {
     xBtn.addEventListener("click", function () {
         playerXO = "X";
         opponentXO = "O";
+        canPlay = true;
         xoChoose(xBtn);
     });
     oBtn.addEventListener("click", function () {
         playerXO = "O";
         opponentXO = "X";
+        canPlay = false;
+        document.querySelector("#automatic-click").click();
         xoChoose(oBtn);
     });
 
@@ -396,5 +413,18 @@ function saveSetting() {
     return JSON.stringify(saveObj);
 }
 document.getElementById("reload-page").addEventListener("click", function () {
+    welcomeBlack.style.display = "block";
+    welcomeBlack.style.opacity = "1";
     location.reload();
 });
+
+function fullGame() {
+    let fullBlockCounter = 0;
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (!XOMatrix[i][j]) fullBlockCounter++;
+        }
+    }
+    if (fullBlockCounter) return false;
+    else return true;
+}
