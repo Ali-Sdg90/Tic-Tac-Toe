@@ -17,6 +17,12 @@ let XOMatrix = [
     ["", "", ""],
 ];
 
+const welcomeBlack = document.getElementById("black-welcome");
+welcomeBlack.style.opacity = "0";
+setTimeout(() => {
+    welcomeBlack.style.display = "none";
+}, 500);
+
 if (localStorage.getItem("XO-Setting")) {
     let localSettingObj = JSON.parse(localStorage.getItem("XO-Setting"));
     hardGameMode = localSettingObj.hardGameModeSave;
@@ -138,7 +144,7 @@ function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
             else if (XOMatrix[i][j]) inlineCounter--;
         }
         if (inlineCounter == countTo) {
-            endGameOrCounterMove(i + 1, false, false);
+            endGameOrCounterMove(i + 1, false, false, ckeckFor);
             outputFunction = true;
         }
     }
@@ -149,7 +155,7 @@ function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
             else if (XOMatrix[j][i]) inlineCounter--;
         }
         if (inlineCounter == countTo) {
-            endGameOrCounterMove(false, i + 1, false);
+            endGameOrCounterMove(false, i + 1, false, ckeckFor);
             outputFunction = true;
         }
     }
@@ -159,7 +165,7 @@ function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
         else if (XOMatrix[i][i]) inlineCounter--;
     }
     if (inlineCounter == countTo) {
-        endGameOrCounterMove(false, 1, true);
+        endGameOrCounterMove(false, 1, true, ckeckFor);
         outputFunction = true;
     }
     inlineCounter = 0;
@@ -169,17 +175,41 @@ function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
         else if (XOMatrix[i][j + 1]) inlineCounter--;
     }
     if (inlineCounter == countTo) {
-        endGameOrCounterMove(false, 2, true);
+        endGameOrCounterMove(false, 2, true, ckeckFor);
         outputFunction = true;
     }
     if (outputFunction == true) return true;
     return false;
 }
-function endGame(i, j, diagonal) {
+function endGame(i, j, diagonal, winner) {
     console.log("-- Game Over --");
     if (!diagonal && i) lineGrider(i);
     if (!diagonal && j) lineGrider(j + 3);
     if (diagonal && j) lineGrider(j + 6);
+    XOBlocks.forEach(function (block) {
+        if (block.textContent != winner) {
+            setTimeout(() => {
+                block.style.transition = "opacity 600ms";
+                block.style.opacity = "0.5";
+            }, 700);
+        }
+    });
+    document.getElementById("win-txt").textContent = `${winner} won !`;
+    const xoGame = document.getElementById("xo-game");
+    setTimeout(() => {
+        xoGame.style.transition = "transform 0.7s";
+        xoGame.style.transform = "translate(0,-14vh) scale(0.7)";
+    }, 300);
+    setTimeout(() => {
+        xoGame.style.transition = "none";
+    }, 1000);
+    document.getElementById("end-screen").style.display = "flex";
+    setTimeout(() => {
+        document.getElementById("win-txt").style.opacity = "1";
+        document.getElementById("end-game-btns").style.transform =
+            "translate(0, 0)";
+        document.getElementById("end-game-btns").style.opacity = "1";
+    }, 500);
 }
 function blockFinder(i, j, diagonal) {
     if (!diagonal && i) {
@@ -272,21 +302,22 @@ if (askXO) {
 }
 
 setTimeout(() => {
-    document.getElementsByTagName("body")[0].style.transition = "0.7s";
-    chooseXOPage.style.transition = "0.5s 0.3s";
+    document.getElementsByTagName("body")[0].style.transition =
+        "background 0.7s";
+    chooseXOPage.style.transition = "opacity 0.5s 0.3s";
     XOBlocks.forEach(function (block) {
         block.style.transition = "background 0.7s, color 0.7s";
     });
-    document.getElementById("setting-btn").style.transition = "500ms";
-    xBtn.style.transition = "0.2s";
-    oBtn.style.transition = "0.2s";
+    document.getElementById("setting-btn").style.transition = "transform 500ms";
+    xBtn.style.transition = "opacity 0.2s,transform 0.2s,boxShadow 0.2s";
+    oBtn.style.transition = "opacity 0.2s,transform 0.2s,boxShadow 0.2s";
 }, 100);
 
 let settingClicked = 0;
 settingMenu = document.getElementById("setting-menu");
 document.getElementById("setting-btn").addEventListener("click", function () {
     if (settingClicked++ % 2 == 0) {
-        settingMenu.style.transition = "0.3s";
+        settingMenu.style.transition = "opacity 0.3s";
         settingMenu.style.display = "grid";
         setTimeout(() => {
             settingMenu.style.opacity = "1";
@@ -364,3 +395,6 @@ function saveSetting() {
     };
     return JSON.stringify(saveObj);
 }
+document.getElementById("reload-page").addEventListener("click", function () {
+    location.reload();
+});
