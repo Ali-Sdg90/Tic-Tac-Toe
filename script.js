@@ -10,7 +10,7 @@ let askXO = true;
 let gameMode = "default";
 let pageColorChange = true;
 let showChallenges = false;
-let showDebug = true;
+let showDebug = false;
 let canPlay = true;
 let XOMatrix = [
     ["", "", ""],
@@ -42,6 +42,9 @@ switch (gameMode) {
     case "only-player":
         document.getElementById("only-player-mode-inp").checked = true;
         break;
+    case "w-friend":
+        document.getElementById("w-friend-mode-inp").checked = true;
+        break;
     case "unbeatable-mode":
         document.getElementById("Unbeatable-mode-inp").checked = true;
         break;
@@ -66,14 +69,23 @@ for (let i in XOBlocks) {
                 changeColor();
             }
             canPlay = true;
-            if (fullGame()) {
-                endGame();
-                return;
-            }
             if (!lineFinder(playerXO, 3, endGame)) {
                 possibleOpponentPlace = [];
                 debugOutput = "Round " + ++roundNO + " =>";
-                if (gameMode != "only-player") {
+                if (fullGame()) {
+                    endGame();
+                    return;
+                }
+                if (gameMode == "w-friend") {
+                    if (playerXO == "X") {
+                        playerXO = "O";
+                        opponentXO = "X";
+                    } else {
+                        playerXO = "X";
+                        opponentXO = "O";
+                    }
+                }
+                if (gameMode != "only-player" && gameMode != "w-friend") {
                     if (hardGameMode) {
                         if (lineFinder(opponentXO, 2, blockFinder)) {
                             debugOutput += " Win Move";
@@ -192,10 +204,10 @@ function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
     return false;
 }
 function endGame(i, j, diagonal, winner) {
-    console.log("-- Game Over --");
-    if (!diagonal && i) lineGrider(i);
-    if (!diagonal && j) lineGrider(j + 3);
-    if (diagonal && j) lineGrider(j + 6);
+    if (showDebug) console.log("-- Game Over --");
+    if (!diagonal && i) showWinLine(i);
+    if (!diagonal && j) showWinLine(j + 3);
+    if (diagonal && j) showWinLine(j + 6);
     XOBlocks.forEach(function (block) {
         if (block.textContent != winner) {
             setTimeout(() => {
@@ -262,7 +274,7 @@ function blockFinder(i, j, diagonal) {
         }
     }
 }
-function lineGrider(num) {
+function showWinLine(num) {
     document.getElementById("win-horizontal-lines").style.display = "grid";
     document.getElementById("win-vertical-lines").style.display = "grid";
     document.getElementById("win-diagonal-lines").style.display = "grid";
@@ -328,6 +340,9 @@ setTimeout(() => {
     document.getElementById("setting-btn").style.transition = "transform 500ms";
     xBtn.style.transition = "opacity 0.2s,transform 0.2s,boxShadow 0.2s";
     oBtn.style.transition = "opacity 0.2s,transform 0.2s,boxShadow 0.2s";
+    document.getElementById("challenge-menu").style.transition = "background 0.7s";
+    document.getElementById("minimize-challenge-btn").style.transition = "background 0.3s";
+    document.getElementById("close-challenge-btn").style.transition = "background 0.3s";
 }, 100);
 
 let settingClicked = 0;
@@ -371,6 +386,12 @@ document
     .getElementById("only-player-mode-inp")
     .addEventListener("click", function () {
         gameMode = "only-player";
+        localStorage.setItem("XO-Setting", saveSetting());
+    });
+document
+    .getElementById("w-friend-mode-inp")
+    .addEventListener("click", function () {
+        gameMode = "w-friend";
         localStorage.setItem("XO-Setting", saveSetting());
     });
 document
@@ -427,4 +448,53 @@ function fullGame() {
     }
     if (fullBlockCounter) return false;
     else return true;
+}
+
+//Make the DIV element draggagle (W3):
+
+dragElement(document.getElementById("challenge-menu"));
+
+function dragElement(elmnt) {
+    var pos1 = 0,
+        pos2 = 0,
+        pos3 = 0,
+        pos4 = 0;
+    if (document.getElementById(elmnt.id + "header")) {
+        // if present, the header is where you move the DIV from:
+        document.getElementById(elmnt.id + "header").onmousedown =
+            dragMouseDown;
+    } else {
+        // otherwise, move the DIV from anywhere inside the DIV:
+        elmnt.onmousedown = dragMouseDown;
+    }
+
+    function dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // get the mouse cursor position at startup:
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        // call a function whenever the cursor moves:
+        document.onmousemove = elementDrag;
+    }
+
+    function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // calculate the new cursor position:
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        // set the element's new position:
+        elmnt.style.top = elmnt.offsetTop - pos2 + "px";
+        elmnt.style.left = elmnt.offsetLeft - pos1 + "px";
+    }
+
+    function closeDragElement() {
+        // stop moving when mouse button is released:
+        document.onmouseup = null;
+        document.onmousemove = null;
+    }
 }

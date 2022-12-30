@@ -19,6 +19,8 @@ body {
     align-items: center;
     width: 100%;
     height: 100vh;
+    /* fix later */
+    overflow: hidden;
 }
 #xo-game {
     width: 70vh;
@@ -103,7 +105,7 @@ hr {
     background: var(--background-color);
     width: 80vh;
     height: 100vh;
-    padding: 15vh 0 !important;
+    padding: 14vh 0 !important;
     font-size: 5vh;
     display: flex;
     justify-content: center;
@@ -117,7 +119,6 @@ hr {
     padding: 5vh 1.5vh;
 }
 #setting-menu > p {
-    /* padding: 1.5vh; */
     color: var(--lineColor);
     font-weight: 600;
     font-size: 4vh;
@@ -153,13 +154,15 @@ span {
     position: absolute;
     display: none;
 }
+#challenge-menu,
 svg {
     position: absolute;
-    top: 1vh;
+    top: 1.5vh;
     right: 2vh;
     cursor: pointer;
     width: 7vh;
     height: 7vh;
+    z-index: 2;
 }
 #setting-menu {
     /* display: grid; */
@@ -197,6 +200,7 @@ input {
     position: absolute;
     opacity: 1;
     transition: opacity 500ms;
+    z-index: 3;
 }
 #end-screen {
     position: absolute;
@@ -263,4 +267,66 @@ input {
 #end-game-btns a:active {
     transform: translate(0, 0.25vh);
     box-shadow: 0 1px 5px var(--lineColor);
+}
+#challenge-menu {
+    outline: 1px solid var(--lineColor);
+    background: var(--background-color);
+    border-radius: 5px;
+    left: 2vh;
+    width: 40vh;
+    height: auto;
+    cursor: default;
+    display: grid;
+    font-family: sans-serif;
+    overflow: hidden;
+    font-size: 2.5vh;
+}
+#nav-challenge-div {
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0 1px 0 var(--lineColor);
+    padding-left: 0.5vh;
+    height: 3.5vh;
+}
+#nav-challenge-div div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+#nav-challenge-div div div {
+    width: 4vh;
+    cursor: pointer;
+}
+#minimize-challenge-btn{
+    font-size: 4vh;
+}
+#minimize-challenge-btn:hover{
+    background: rgb(60, 60, 255);
+}
+#close-challenge-btn:hover{
+    background: red;
+}
+#challenges {
+    padding: 1vh 0.75vh 0.25vh 0.75vh;
+}
+#challenges form {
+    display: grid;
+    grid-template-columns: 90% 10%;
+}
+#challenges hr {
+    opacity: 1;
+    border-color: var(--lineColor);
+    background: var(--lineColor);
+    height: 2px;
+    margin: 1vh auto;
+    width: 35vh;
+    display: block;
+}
+#challenges label {
+    display: flex;
+    align-items: center;
+}
+.challenge-mode {
+    font-weight: 600;
 }
