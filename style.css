@@ -103,7 +103,7 @@ hr {
 #setting-menu {
     position: absolute;
     background: var(--background-color);
-    width: 80vh;
+    width: 100vw;
     height: 100vh;
     padding: 14vh 0 !important;
     font-size: 5vh;
@@ -111,6 +111,7 @@ hr {
     justify-content: center;
     align-items: center;
     font-family: cursive;
+    z-index: 2;
 }
 #choose-xo-div {
     background: var(--game-color);
@@ -162,7 +163,8 @@ svg {
     cursor: pointer;
     width: 7vh;
     height: 7vh;
-    z-index: 2;
+    z-index: 3;
+    background: var(--background-color);
 }
 #setting-menu {
     /* display: grid; */
@@ -200,7 +202,7 @@ input {
     position: absolute;
     opacity: 1;
     transition: opacity 500ms;
-    z-index: 3;
+    z-index: 4;
 }
 #end-screen {
     position: absolute;
@@ -274,12 +276,14 @@ input {
     border-radius: 5px;
     left: 2vh;
     width: 40vh;
-    height: auto;
+    height: 58.5vh;
     cursor: default;
-    display: grid;
+    /* display: grid; */
+    display: none;
     font-family: sans-serif;
     overflow: hidden;
     font-size: 2.5vh;
+    z-index: 1;
 }
 #nav-challenge-div {
     display: flex;
@@ -287,6 +291,8 @@ input {
     box-shadow: 0 1px 0 var(--lineColor);
     padding-left: 0.5vh;
     height: 3.5vh;
+    background: var(--game-color);
+    color: black;
 }
 #nav-challenge-div div {
     display: flex;
@@ -299,16 +305,13 @@ input {
     cursor: pointer;
 }
 #minimize-challenge-btn{
-    font-size: 4vh;
-}
-#minimize-challenge-btn:hover{
-    background: rgb(60, 60, 255);
+    font-size: 2.5vh;
 }
 #close-challenge-btn:hover{
     background: red;
 }
 #challenges {
-    padding: 1vh 0.75vh 0.25vh 0.75vh;
+    padding: 1vh 0.75vh 1vh 1.25vh;
 }
 #challenges form {
     display: grid;

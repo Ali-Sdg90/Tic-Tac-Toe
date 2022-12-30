@@ -10,6 +10,7 @@ let askXO = true;
 let gameMode = "default";
 let pageColorChange = true;
 let showChallenges = false;
+let challengesCanRun = false;
 let showDebug = false;
 let canPlay = true;
 let XOMatrix = [
@@ -134,6 +135,8 @@ for (let i in XOBlocks) {
                         disableClick.style.display = "none";
                     }, 900);
                 } else {
+                    if (challengesCanRun) {
+                    }
                     debugOutput += " Zzz";
                 }
                 if (showDebug) console.log(debugOutput);
@@ -337,12 +340,16 @@ setTimeout(() => {
     XOBlocks.forEach(function (block) {
         block.style.transition = "background 0.7s, color 0.7s";
     });
-    document.getElementById("setting-btn").style.transition = "transform 500ms";
-    xBtn.style.transition = "opacity 0.2s,transform 0.2s,boxShadow 0.2s";
-    oBtn.style.transition = "opacity 0.2s,transform 0.2s,boxShadow 0.2s";
-    document.getElementById("challenge-menu").style.transition = "background 0.7s";
-    document.getElementById("minimize-challenge-btn").style.transition = "background 0.3s";
-    document.getElementById("close-challenge-btn").style.transition = "background 0.3s";
+    document.getElementById("setting-btn").style.transition =
+        "transform 0.5s, background 0.7s";
+    xBtn.style.transition = "opacity 0.2s, transform 0.2s, boxShadow 0.2s";
+    oBtn.style.transition = "opacity 0.2s, transform 0.2s, boxShadow 0.2s";
+    document.getElementById("challenge-menu").style.transition =
+        "background 0.7s, height 0.6s";
+    document.getElementById("minimize-challenge-btn").style.transition =
+        "background 0.3s, transform 0.5s";
+    document.getElementById("close-challenge-btn").style.transition =
+        "background 0.3s";
 }, 100);
 
 let settingClicked = 0;
@@ -386,24 +393,32 @@ document
     .getElementById("only-player-mode-inp")
     .addEventListener("click", function () {
         gameMode = "only-player";
+        challengesCanRun = false;
+        showChallenges = false;
         localStorage.setItem("XO-Setting", saveSetting());
     });
 document
     .getElementById("w-friend-mode-inp")
     .addEventListener("click", function () {
         gameMode = "w-friend";
+        challengesCanRun = false;
+        showChallenges = false;
         localStorage.setItem("XO-Setting", saveSetting());
     });
 document
     .getElementById("Unbeatable-mode-inp")
     .addEventListener("click", function () {
         gameMode = "unbeatable-mode";
+        challengesCanRun = false;
+        showChallenges = false;
         localStorage.setItem("XO-Setting", saveSetting());
     });
 document
     .getElementById("default-mode-inp")
     .addEventListener("click", function () {
         gameMode = "default";
+        challengesCanRun = false;
+        showChallenges = false;
         localStorage.setItem("XO-Setting", saveSetting());
     });
 document
@@ -412,6 +427,20 @@ document
         if (document.getElementById("change-color-inp").checked) {
             pageColorChange = true;
         } else pageColorChange = false;
+        localStorage.setItem("XO-Setting", saveSetting());
+    });
+document
+    .getElementById("challenges-inp")
+    .addEventListener("click", function () {
+        if (document.getElementById("challenges-inp").checked) {
+            showChallenges = true;
+            challengesCanRun = true;
+            document.getElementById("challenge-menu").style.display = "grid";
+        } else {
+            showChallenges = false;
+            challengesCanRun = false;
+            document.getElementById("challenge-menu").style.display = "none";
+        }
         localStorage.setItem("XO-Setting", saveSetting());
     });
 document.getElementById("debug-inp").addEventListener("click", function () {
@@ -498,3 +527,19 @@ function dragElement(elmnt) {
         document.onmousemove = null;
     }
 }
+const challengeMenu = document.getElementById("challenge-menu");
+const minimizeChallenge = document.getElementById("minimize-challenge-btn");
+const closeChallenge = document.getElementById("close-challenge-btn");
+let minimizeClick = 0;
+minimizeChallenge.addEventListener("click", function () {
+    minimizeChallenge.style.background = "transparent";
+    if (minimizeClick % 2) {
+        challengeMenu.style.height = "58.5vh";
+    } else {
+        challengeMenu.style.height = "4.5vh";
+    }
+    minimizeChallenge.style.transform = `rotate(${++minimizeClick * 180}deg)`;
+});
+closeChallenge.addEventListener("click", function () {
+    challengeMenu.style.display = "none";
+});
