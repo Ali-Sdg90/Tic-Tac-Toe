@@ -111,7 +111,7 @@ hr {
     justify-content: center;
     align-items: center;
     font-family: cursive;
-    z-index: 2;
+    z-index: 1;
 }
 #choose-xo-div {
     background: var(--game-color);
@@ -163,8 +163,7 @@ svg {
     cursor: pointer;
     width: 7vh;
     height: 7vh;
-    z-index: 3;
-    background: var(--background-color);
+    z-index: 2;
 }
 #setting-menu {
     /* display: grid; */
@@ -202,7 +201,7 @@ input {
     position: absolute;
     opacity: 1;
     transition: opacity 500ms;
-    z-index: 4;
+    z-index: 3;
 }
 #end-screen {
     position: absolute;
@@ -273,6 +272,7 @@ input {
 #challenge-menu {
     outline: 1px solid var(--lineColor);
     background: var(--background-color);
+    opacity: 0.9;
     border-radius: 5px;
     left: 2vh;
     width: 40vh;
@@ -283,7 +283,7 @@ input {
     font-family: sans-serif;
     overflow: hidden;
     font-size: 2.5vh;
-    z-index: 1;
+    z-index: 3;
 }
 #nav-challenge-div {
     display: flex;
@@ -304,14 +304,16 @@ input {
     width: 4vh;
     cursor: pointer;
 }
-#minimize-challenge-btn{
+#minimize-challenge-btn {
     font-size: 2.5vh;
 }
-#close-challenge-btn:hover{
+#close-challenge-btn:hover {
     background: red;
 }
 #challenges {
-    padding: 1vh 0.75vh 1vh 1.25vh;
+    padding: 1vh 0.75vh 2vh 1.25vh;
+    display: grid;
+    grid-template-rows: repeat(16, 3.25vh);
 }
 #challenges form {
     display: grid;
