@@ -105,7 +105,7 @@ hr {
     background: var(--background-color);
     width: 100vw;
     height: 100vh;
-    padding: 14vh 0 !important;
+    padding: 12vh 0 !important;
     font-size: 5vh;
     display: flex;
     justify-content: center;
@@ -293,12 +293,14 @@ input {
     height: 3.5vh;
     background: var(--game-color);
     color: black;
+    cursor: all-scroll;
 }
 #nav-challenge-div div {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
+    cursor: all-scroll;
 }
 #nav-challenge-div div div {
     width: 4vh;
@@ -311,6 +313,7 @@ input {
     background: red;
 }
 #challenges {
+    pointer-events: none;
     padding: 1vh 0.75vh 2vh 1.25vh;
     display: grid;
     grid-template-rows: repeat(16, 3.25vh);

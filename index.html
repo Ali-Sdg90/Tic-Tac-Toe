@@ -131,11 +131,21 @@
             </div>
             <div>
                 <form>
-                    <label for="challenges-inp">Run challenges</label>
+                    <label for="run-challenges-inp">Run challenges</label>
                     <input
                         type="checkbox"
-                        name="challenges-inp"
-                        id="challenges-inp"
+                        name="run-challenges-inp"
+                        id="run-challenges-inp"
+                    />
+                </form>
+                <form>
+                    <label id="show-challenges-label" for="show-challenges-inp"
+                        >Show challenges</label
+                    >
+                    <input
+                        type="checkbox"
+                        name="show-challenges-inp"
+                        id="show-challenges-inp"
                     />
                 </form>
             </div>
@@ -157,6 +167,32 @@
                 </div>
             </div>
             <div id="challenges">
+                <div class="challenge-mode">Default :</div>
+                <form>
+                    <label for="win-Default-challenge-inp">Win a game</label>
+                    <input
+                        type="checkbox"
+                        name="win-Default-challenge"
+                        id="win-Default-challenge-inp"
+                    />
+                </form>
+                <form>
+                    <label for="draw-Default-challenge-inp">draw a game</label>
+                    <input
+                        type="checkbox"
+                        name="draw-Default-challenge"
+                        id="draw-Default-challenge-inp"
+                    />
+                </form>
+                <form>
+                    <label for="lose-Default-challenge-inp">lose a game</label>
+                    <input
+                        type="checkbox"
+                        name="lose-Default-challenge"
+                        id="lose-Default-challenge-inp"
+                    />
+                </form>
+                <hr class="challenge-hr" />
                 <div class="challenge-mode">Only you :</div>
                 <form>
                     <label for="win-3-way-inp">Win with 3 ways</label>
@@ -187,21 +223,14 @@
                     />
                 </form>
                 <form>
-                    <label for="Lose-6-ai-challenge-inp">Lose in 6 ways</label>
+                    <label for="Lose-8-ai-challenge-inp">Lose in 8 ways</label>
                     <input
                         type="checkbox"
-                        name="Lose-6-ai-challenge"
-                        id="Lose-6-ai-challenge-inp"
+                        name="Lose-8-ai-challenge"
+                        id="Lose-8-ai-challenge-inp"
                     />
                 </form>
-                <form>
-                    <label for="have-5-x-challenge-inp">Have 5 X in</label>
-                    <input
-                        type="checkbox"
-                        name="have-5-x-challenge"
-                        id="have-5-x-challenge-inp"
-                    />
-                </form>
+
                 <form>
                     <label for="have-3-x-challenge-inp"
                         >End game with only 3 X in
@@ -212,30 +241,14 @@
                         id="have-3-x-challenge-inp"
                     />
                 </form>
-                <hr class="challenge-hr" />
-                <div class="challenge-mode">Default :</div>
                 <form>
-                    <label for="win-Default-challenge-inp">Win a game</label>
+                    <label for="have-5-x-challenge-inp"
+                        >End game with only 5 X in</label
+                    >
                     <input
                         type="checkbox"
-                        name="win-Default-challenge"
-                        id="win-Default-challenge-inp"
-                    />
-                </form>
-                <form>
-                    <label for="draw-Default-challenge-inp">draw a game</label>
-                    <input
-                        type="checkbox"
-                        name="draw-Default-challenge"
-                        id="draw-Default-challenge-inp"
-                    />
-                </form>
-                <form>
-                    <label for="lose-Default-challenge-inp">lose a game</label>
-                    <input
-                        type="checkbox"
-                        name="lose-Default-challenge"
-                        id="lose-Default-challenge-inp"
+                        name="have-5-x-challenge"
+                        id="have-5-x-challenge-inp"
                     />
                 </form>
             </div>

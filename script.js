@@ -1,6 +1,8 @@
 const XOBlocks = Array.from(document.querySelectorAll("#lines div"));
 const disableClick = document.getElementById("disable-click");
 const challengeMenu = document.getElementById("challenge-menu");
+const runChallengesInp = document.getElementById("run-challenges-inp");
+const showChallengesInp = document.getElementById("show-challenges-inp");
 let playerXO = "X";
 let opponentXO = "O";
 let debugOutput = "";
@@ -8,7 +10,7 @@ let possibleOpponentPlace = [];
 let roundNO = 0;
 let hardGameMode = true;
 let askXO = true;
-let gameMode = "default";
+let gameMode = "default"; //"default" "only-player" "w-friend" "unbeatable"
 let pageColorChange = true;
 let challengesCanRun = false;
 let showDebug = false;
@@ -18,7 +20,7 @@ let XOMatrix = [
     ["", "", ""],
     ["", "", ""],
 ];
-
+// localStorage.clear();
 const welcomeBlack = document.getElementById("black-welcome");
 welcomeBlack.style.opacity = "0";
 setTimeout(() => {
@@ -35,6 +37,28 @@ if (localStorage.getItem("XO-Setting")) {
     showDebug = localSettingObj.showDebugSave;
 }
 
+if (localStorage.getItem("XO-Challenge")) {
+    let localChallengeObj = JSON.parse(localStorage.getItem("XO-Challenge"));
+    document.getElementById("win-Default-challenge-inp").checked =
+        localChallengeObj.defaultWinSave;
+    document.getElementById("draw-Default-challenge-inp").checked =
+        localChallengeObj.defaultDrawSave;
+    document.getElementById("lose-Default-challenge-inp").checked =
+        localChallengeObj.defaultLoseSave;
+    document.getElementById("win-3-way-inp").checked =
+        localChallengeObj.onlyPlayer3waySave;
+    document.getElementById("big-x-challenge-inp").checked =
+        localChallengeObj.wFriendBigXSave;
+    document.getElementById("draw-ai-challenge-inp").checked =
+        localChallengeObj.unbeatableDrawSave;
+    document.getElementById("Lose-8-ai-challenge-inp").checked =
+        localChallengeObj.unbeatableLose8Save;
+    document.getElementById("have-3-x-challenge-inp").checked =
+        localChallengeObj.unbeatableEndW3XSave;
+    document.getElementById("have-5-x-challenge-inp").checked =
+        localChallengeObj.unbeatableEndW5XSave;
+}
+
 if (hardGameMode) document.getElementById("hard-difficulty").checked = true;
 else document.getElementById("easy-difficulty").checked = true;
 if (askXO) document.getElementById("ask-xo").checked = true;
@@ -46,7 +70,7 @@ switch (gameMode) {
     case "w-friend":
         document.getElementById("w-friend-mode-inp").checked = true;
         break;
-    case "unbeatable-mode":
+    case "unbeatable":
         document.getElementById("Unbeatable-mode-inp").checked = true;
         break;
     case "default":
@@ -56,9 +80,14 @@ switch (gameMode) {
 if (pageColorChange) document.getElementById("change-color-inp").checked = true;
 else document.getElementById("change-color-inp").checked = false;
 if (challengesCanRun) {
-    document.getElementById("challenges-inp").checked = true;
+    runChallengesInp.checked = true;
+    showChallengesInp.checked = true;
     challengeMenu.style.display = "grid";
-} else document.getElementById("challenges-inp").checked = false;
+} else {
+    runChallengesInp.checked = false;
+    showChallengesInp.style.opacity = "0.5";
+    document.getElementById("show-challenges-label").style.opacity = "0.5";
+}
 if (showDebug) document.getElementById("debug-inp").checked = true;
 else document.getElementById("debug-inp").checked = false;
 
@@ -120,7 +149,7 @@ for (let i in XOBlocks) {
                     } else {
                         randomMoveOpponent();
                     }
-                    if (gameMode != "unbeatable-mode") {
+                    if (gameMode != "unbeatable") {
                         randomPlace =
                             possibleOpponentPlace[
                                 Math.floor(
@@ -165,10 +194,10 @@ for (let i in XOBlocks) {
     });
 }
 function randomMoveOpponent() {
-    if (gameMode == "unbeatable-mode" && hardGameMode) {
+    if (gameMode == "unbeatable" && hardGameMode) {
         debugOutput += " You can play again :)";
         return;
-    } else if (gameMode == "unbeatable-mode" && !hardGameMode) {
+    } else if (gameMode == "unbeatable" && !hardGameMode) {
         debugOutput += " EZ :)";
     } else debugOutput += " Random Move";
     for (let i = 0; i < 3; i++) {
@@ -226,11 +255,121 @@ function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
     if (outputFunction == true) return true;
     return false;
 }
+function XOMatrixChecker(Checkfor) {
+    challengeChecker = true;
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (XOMatrix[i][j] != Checkfor[i * 3 + j]) challengeChecker = false;
+        }
+    }
+    return challengeChecker;
+}
+function saveChallenge() {
+    let saveObj = {
+        defaultWinSave: document.getElementById("win-Default-challenge-inp")
+            .checked,
+        defaultDrawSave: document.getElementById("draw-Default-challenge-inp")
+            .checked,
+        defaultLoseSave: document.getElementById("lose-Default-challenge-inp")
+            .checked,
+        onlyPlayer3waySave: document.getElementById("win-3-way-inp").checked,
+        wFriendBigXSave: document.getElementById("big-x-challenge-inp").checked,
+        unbeatableDrawSave: document.getElementById("draw-ai-challenge-inp")
+            .checked,
+        unbeatableLose8Save: document.getElementById("Lose-8-ai-challenge-inp")
+            .checked,
+        unbeatableEndW3XSave: document.getElementById("have-3-x-challenge-inp")
+            .checked,
+        unbeatableEndW5XSave: document.getElementById("have-5-x-challenge-inp")
+            .checked,
+    };
+    return JSON.stringify(saveObj);
+}
+function challengeCompleter(inpId) {
+    if (!document.getElementById(inpId).checked) {
+        if (showDebug) console.log("-- challenge complete --");
+        document.getElementById(inpId).checked = true;
+        localStorage.setItem("XO-Challenge", saveChallenge());
+    }
+}
+
 function endGame(i, j, diagonal, winner) {
     if (showDebug) console.log("-- Game Over --");
     if (!diagonal && i) showWinLine(i);
     if (!diagonal && j) showWinLine(j + 3);
     if (diagonal && j) showWinLine(j + 6);
+    if (challengesCanRun) {
+        if (gameMode == "default") {
+            if (winner == playerXO) {
+                challengeCompleter("win-Default-challenge-inp");
+            }
+            if (!winner) {
+                challengeCompleter("draw-Default-challenge-inp");
+            }
+            if (winner == opponentXO) {
+                challengeCompleter("lose-Default-challenge-inp");
+            }
+        }
+        if (gameMode == "only-player") {
+            if (
+                XOMatrixChecker([
+                    playerXO,
+                    playerXO,
+                    "",
+                    playerXO,
+                    playerXO,
+                    playerXO,
+                    "",
+                    playerXO,
+                    playerXO,
+                ]) ||
+                XOMatrixChecker([
+                    "",
+                    playerXO,
+                    playerXO,
+                    playerXO,
+                    playerXO,
+                    playerXO,
+                    playerXO,
+                    playerXO,
+                    "",
+                ])
+            ) {
+                challengeCompleter("win-3-way-inp");
+            }
+        }
+        if (gameMode == "w-friend") {
+            if (
+                XOMatrixChecker(["X", "O", "X", "O", "X", "O", "X", "O", "X"])
+            ) {
+                challengeCompleter("big-x-challenge-inp");
+            }
+        }
+        if (gameMode == "unbeatable") {
+            if (!winner) {
+                challengeCompleter("draw-ai-challenge-inp");
+            }
+            if (!hardGameMode) {
+                challengeCompleter("Lose-8-ai-challenge-inp");
+            }
+            function xCounter(countTo) {
+                amountOfX = 0;
+                for (let i = 0; i < 3; i++) {
+                    for (let j = 0; j < 3; j++) {
+                        if (XOMatrix[i][j] == "X") amountOfX++;
+                    }
+                }
+                if (amountOfX == countTo) return true;
+                else return false;
+            }
+            if (xCounter(3)) {
+                challengeCompleter("have-3-x-challenge-inp");
+            }
+            if (xCounter(5)) {
+                challengeCompleter("have-5-x-challenge-inp");
+            }
+        }
+    }
     XOBlocks.forEach(function (block) {
         if (block.textContent != winner) {
             setTimeout(() => {
@@ -407,7 +546,7 @@ document
 document
     .getElementById("Unbeatable-mode-inp")
     .addEventListener("click", function () {
-        gameMode = "unbeatable-mode";
+        gameMode = "unbeatable";
         challengesCantRun();
     });
 document
@@ -417,7 +556,10 @@ document
         challengesCantRun();
     });
 function challengesCantRun() {
-    document.getElementById("challenges-inp").checked = false;
+    runChallengesInp.checked = false;
+    showChallengesInp.checked = false;
+    showChallengesInp.style.opacity = "0.5";
+    document.getElementById("show-challenges-label").style.opacity = "0.5";
     challengeMenu.style.display = "none";
     challengesCanRun = false;
     localStorage.setItem("XO-Setting", saveSetting());
@@ -431,16 +573,37 @@ document
         localStorage.setItem("XO-Setting", saveSetting());
     });
 document
-    .getElementById("challenges-inp")
+    .getElementById("run-challenges-inp")
     .addEventListener("click", function () {
-        if (document.getElementById("challenges-inp").checked) {
+        if (runChallengesInp.checked) {
             challengesCanRun = true;
             challengeMenu.style.display = "grid";
+            showChallengesInp.style.opacity = "1";
+            document.getElementById("show-challenges-label").style.opacity =
+                "1";
+            showChallengesInp.checked = true;
         } else {
             challengesCanRun = false;
             challengeMenu.style.display = "none";
+            showChallengesInp.style.opacity = "0.5";
+            document.getElementById("show-challenges-label").style.opacity =
+                "0.5";
+            showChallengesInp.checked = false;
         }
         localStorage.setItem("XO-Setting", saveSetting());
+    });
+document
+    .getElementById("show-challenges-inp")
+    .addEventListener("click", function () {
+        if (challengesCanRun) {
+            if (showChallengesInp.checked) {
+                challengeMenu.style.display = "grid";
+            } else {
+                challengeMenu.style.display = "none";
+            }
+        } else {
+            showChallengesInp.checked = false;
+        }
     });
 document.getElementById("debug-inp").addEventListener("click", function () {
     if (document.getElementById("debug-inp").checked) {
@@ -548,4 +711,5 @@ minimizeChallenge.addEventListener("click", function () {
 const closeChallenge = document.getElementById("close-challenge-btn");
 closeChallenge.addEventListener("click", function () {
     challengeMenu.style.display = "none";
+    showChallengesInp.checked = false;
 });
