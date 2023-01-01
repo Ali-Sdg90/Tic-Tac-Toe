@@ -24,7 +24,6 @@ body {
 #xo-game {
     width: 70vh;
     height: 70vh;
-    /* transform: translate(0, -14vh) scale(0.7); */
 }
 #lines {
     width: 100%;
@@ -193,6 +192,7 @@ svg {
 input {
     transform: scale(1.5);
     margin: 1vh;
+    height: 2vh;
 }
 #black-welcome {
     width: 100%;
@@ -356,4 +356,23 @@ input {
 #reload-page-btn {
     top: 10vh;
     transition: transform 500ms;
+}
+#challenges-hint div {
+    position: absolute;
+    /* background: red; */
+    width: 2.6vh;
+    height: 2.6vh;
+    right: 1.4vh;
+}
+#hint-big-x {
+    top: 34.4vh;
+}
+#hint-3-ways {
+    top: 24.65vh;
+}
+#hint-lose-8{
+    top: 47.5vh;
+}
+#hint-3-x{
+    top: 50.7vh;
 }

@@ -21,6 +21,7 @@ let XOMatrix = [
     ["", "", ""],
 ];
 // localStorage.clear();
+
 const welcomeBlack = document.getElementById("black-welcome");
 welcomeBlack.style.display = "block";
 welcomeBlack.style.opacity = "1";
@@ -31,6 +32,7 @@ setTimeout(() => {
     }, 500);
 }, 10);
 
+//Add settings if available
 if (localStorage.getItem("XO-Setting")) {
     let localSettingObj = JSON.parse(localStorage.getItem("XO-Setting"));
     hardGameMode = localSettingObj.hardGameModeSave;
@@ -41,6 +43,7 @@ if (localStorage.getItem("XO-Setting")) {
     showDebug = localSettingObj.showDebugSave;
 }
 
+//Add challenges if available
 if (localStorage.getItem("XO-Challenge")) {
     let localChallengeObj = JSON.parse(localStorage.getItem("XO-Challenge"));
     document.getElementById("win-Default-challenge-inp").checked =
@@ -63,6 +66,7 @@ if (localStorage.getItem("XO-Challenge")) {
         localChallengeObj.unbeatableEndW5XSave;
 }
 
+//Tick the settings
 if (hardGameMode) document.getElementById("hard-difficulty").checked = true;
 else document.getElementById("easy-difficulty").checked = true;
 if (askXO) document.getElementById("ask-xo").checked = true;
@@ -95,6 +99,7 @@ if (challengesCanRun) {
 if (showDebug) document.getElementById("debug-inp").checked = true;
 else document.getElementById("debug-inp").checked = false;
 
+//Add a transition to the element after the first page load
 setTimeout(() => {
     document.getElementsByTagName("body")[0].style.transition =
         "background 0.7s";
@@ -117,9 +122,11 @@ setTimeout(() => {
         "background 0.7s";
 }, 100);
 
+//main process
 for (let i in XOBlocks) {
     XOBlocks[i].addEventListener("click", function () {
         if (!XOBlocks[i].textContent) {
+            //add playerXO to game
             if (canPlay) {
                 XOBlocks[i].textContent = playerXO;
                 XOBlocks[i].style.cursor = "default";
@@ -127,6 +134,7 @@ for (let i in XOBlocks) {
                 changeColor();
             }
             canPlay = true;
+            //if player dosn't win opponent can play
             if (!lineFinder(playerXO, 3, endGame)) {
                 possibleOpponentPlace = [];
                 debugOutput = "Round " + ++roundNO + " =>";
@@ -159,6 +167,7 @@ for (let i in XOBlocks) {
                         randomMoveOpponent();
                     }
                     if (gameMode != "unbeatable") {
+                        //Choose a place from the possible places
                         randomPlace =
                             possibleOpponentPlace[
                                 Math.floor(
@@ -174,7 +183,9 @@ for (let i in XOBlocks) {
                             XOMatrix[i[0]][i[1]] = opponentXO;
                         }
                     }
+                    //The player cannot play multiple time
                     disableClick.style.display = "block";
+                    //add opponentXO to game
                     setTimeout(() => {
                         for (let k in XOBlocks) {
                             XOBlocks[k].textContent =
@@ -187,6 +198,7 @@ for (let i in XOBlocks) {
                                         "default";
                             }
                         }
+                        //endGame if opponent win
                         if (lineFinder(opponentXO, 3, endGame)) {
                         } else if (fullGame()) {
                             endGame();
@@ -202,6 +214,8 @@ for (let i in XOBlocks) {
         }
     });
 }
+
+//unbeatable dosn't have randomMove
 function randomMoveOpponent() {
     if (gameMode == "unbeatable" && hardGameMode) {
         debugOutput += " You can play again :)";
@@ -217,9 +231,15 @@ function randomMoveOpponent() {
         }
     }
 }
+
+//lineFinder for endGame() or blockFinder()
+//ckeckFor playerXO or opponentXO
+//countTo 3 for win player or opponent
+//countTo 2 for blockFinder
 function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
     let inlineCounter = 0;
     let outputFunction = false;
+    // i
     for (let i = 0; i < 3; i++) {
         inlineCounter = 0;
         for (let j = 0; j < 3; j++) {
@@ -231,6 +251,7 @@ function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
             outputFunction = true;
         }
     }
+    // j
     for (let i = 0; i < 3; i++) {
         inlineCounter = 0;
         for (let j = 0; j < 3; j++) {
@@ -242,6 +263,7 @@ function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
             outputFunction = true;
         }
     }
+    // \
     inlineCounter = 0;
     for (let i = 0; i < 3; i++) {
         if (XOMatrix[i][i] == ckeckFor) inlineCounter++;
@@ -251,6 +273,7 @@ function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
         endGameOrCounterMove(false, 1, true, ckeckFor);
         outputFunction = true;
     }
+    // /
     inlineCounter = 0;
     let j = 2;
     for (let i = 0; i < 3; i++) {
@@ -264,6 +287,8 @@ function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
     if (outputFunction == true) return true;
     return false;
 }
+
+//check if XOMatrix == Checkfor
 function XOMatrixChecker(Checkfor) {
     challengeChecker = true;
     for (let i = 0; i < 3; i++) {
@@ -273,6 +298,8 @@ function XOMatrixChecker(Checkfor) {
     }
     return challengeChecker;
 }
+
+//return all challenges in one obj
 function saveChallenge() {
     let saveObj = {
         defaultWinSave: document.getElementById("win-Default-challenge-inp")
@@ -294,6 +321,8 @@ function saveChallenge() {
     };
     return JSON.stringify(saveObj);
 }
+
+//add saveChallenge to localStorage and mark a complete challenge
 function challengeCompleter(inpId) {
     if (!document.getElementById(inpId).checked) {
         if (showDebug) console.log("-- challenge complete --");
@@ -302,6 +331,8 @@ function challengeCompleter(inpId) {
         allChallengeCompleteChecker(1000);
     }
 }
+
+//if all challenge complete show "complete-challenges"
 allChallengeCompleteChecker(0);
 function allChallengeCompleteChecker(delay) {
     let allInpChallenge = document.querySelectorAll("#challenges input");
@@ -313,10 +344,14 @@ function allChallengeCompleteChecker(delay) {
         setTimeout(() => {
             document.getElementById("complete-challenges").style.display =
                 "block";
+            document.getElementById("challenges-hint").style.display =
+                "none";
         }, delay);
     }
 }
 
+//show WinLine and check if challenge complete
+//winner can be player or opponent or empty as draw
 function endGame(i, j, diagonal, winner) {
     if (showDebug) console.log("-- Game Over --");
     if (!diagonal && i) showWinLine(i);
@@ -394,6 +429,7 @@ function endGame(i, j, diagonal, winner) {
             }
         }
     }
+    //fades everywhere except the winning blocks
     XOBlocks.forEach(function (block) {
         if (block.textContent != winner) {
             setTimeout(() => {
@@ -407,6 +443,7 @@ function endGame(i, j, diagonal, winner) {
     } else {
         document.getElementById("win-txt").textContent = "DRAW !";
     }
+    //endGame animations and elements
     const xoGame = document.getElementById("xo-game");
     setTimeout(() => {
         xoGame.style.transition = "transform 0.7s";
@@ -423,6 +460,8 @@ function endGame(i, j, diagonal, winner) {
         document.getElementById("end-game-btns").style.opacity = "1";
     }, 500);
 }
+
+//add possible Places for opponent to win or counter move
 function blockFinder(i, j, diagonal) {
     if (!diagonal && i) {
         i--;
@@ -460,20 +499,24 @@ function blockFinder(i, j, diagonal) {
         }
     }
 }
+
+//make win line visible on screen
 function showWinLine(num) {
     document.getElementById("win-horizontal-lines").style.display = "grid";
     document.getElementById("win-vertical-lines").style.display = "grid";
     document.getElementById("win-diagonal-lines").style.display = "grid";
     document.getElementById(`win-line${num}`).style.opacity = "1";
 }
-let rgbSaver = [];
-const root = document.querySelector(":root");
+
+//changeColor after player or opponent move
+//background-color = game-color * 2 = lineColor * 3
 changeColor();
 function changeColor() {
     if (!pageColorChange) return;
+    let rgbSaver = [];
     for (let i = 0; i < 3; i++)
         rgbSaver.push(Math.floor(Math.random() * 226 + 70));
-    root.style.cssText = `
+    document.querySelector(":root").style.cssText = `
     --background-color: rgb(${rgbSaver[0]}, ${rgbSaver[1]}, ${rgbSaver[2]});
     --game-color: rgb(${rgbSaver[0] / 2}, ${rgbSaver[1] / 2}, ${
         rgbSaver[2] / 2
@@ -484,6 +527,8 @@ function changeColor() {
     `;
     rgbSaver = [];
 }
+
+//change playerXO and opponentXO
 const chooseXOPage = document.getElementById("choose-xo");
 const xBtn = document.getElementById("x-btn");
 const oBtn = document.getElementById("o-btn");
@@ -516,10 +561,7 @@ if (askXO) {
     chooseXOPage.style.display = "none";
 }
 
-//
-
-//
-
+//show setting-menu and rotate setting-btn
 let settingClicked = 0;
 settingMenu = document.getElementById("setting-menu");
 document.getElementById("setting-btn").addEventListener("click", function () {
@@ -541,12 +583,16 @@ document.getElementById("setting-btn").addEventListener("click", function () {
         settingClicked * 90
     }deg)`;
 });
+
+//dblclick setting-btn to reset game
 document
     .getElementById("setting-btn")
     .addEventListener("dblclick", function () {
         localStorage.clear();
         location.reload();
     });
+
+//reload page btn and btn animation
 let rotateDeg = 0;
 document
     .getElementById("reload-page-btn")
@@ -558,6 +604,9 @@ document
             location.reload();
         }, 500);
     });
+
+//setting checkboxes or radios
+//difficulty - ask-xo - gameMode - changeColor - challengesCanRun - showDebug
 document
     .getElementById("easy-difficulty")
     .addEventListener("click", function () {
@@ -600,15 +649,6 @@ document
         gameMode = "default";
         challengesCantRun();
     });
-function challengesCantRun() {
-    runChallengesInp.checked = false;
-    showChallengesInp.checked = false;
-    showChallengesInp.style.opacity = "0.5";
-    document.getElementById("show-challenges-label").style.opacity = "0.5";
-    challengeMenu.style.display = "none";
-    challengesCanRun = false;
-    localStorage.setItem("XO-Setting", saveSetting());
-}
 document
     .getElementById("change-color-inp")
     .addEventListener("click", function () {
@@ -617,6 +657,8 @@ document
         } else pageColorChange = false;
         localStorage.setItem("XO-Setting", saveSetting());
     });
+
+//show-challenges can't be true while run-challenges isn't
 document
     .getElementById("run-challenges-inp")
     .addEventListener("click", function () {
@@ -656,8 +698,19 @@ document.getElementById("debug-inp").addEventListener("click", function () {
     } else showDebug = false;
     localStorage.setItem("XO-Setting", saveSetting());
 });
-// localStorage.clear();
 
+//challengesCantRun by change gameMode or disable it
+function challengesCantRun() {
+    runChallengesInp.checked = false;
+    showChallengesInp.checked = false;
+    showChallengesInp.style.opacity = "0.5";
+    document.getElementById("show-challenges-label").style.opacity = "0.5";
+    challengeMenu.style.display = "none";
+    challengesCanRun = false;
+    localStorage.setItem("XO-Setting", saveSetting());
+}
+
+//return all setting in one obj
 function saveSetting() {
     let saveObj = {
         hardGameModeSave: hardGameMode,
@@ -669,12 +722,16 @@ function saveSetting() {
     };
     return JSON.stringify(saveObj);
 }
+
+//endGame btn
+//github - reloud - jsfiddle
 document
-    .getElementById("endGame-reload-page")
+    .getElementById("endGame-reload-page-btn")
     .addEventListener("click", function () {
         location.reload();
     });
 
+//check for empty block exist in game
 function fullGame() {
     let fullBlockCounter = 0;
     for (let i = 0; i < 3; i++) {
@@ -734,6 +791,7 @@ function dragElement(elmnt) {
     }
 }
 
+//minimize challenge menu
 const minimizeChallenge = document.getElementById("minimize-challenge-btn");
 let minimizeClick = 0;
 minimizeChallenge.addEventListener("click", function () {
@@ -753,6 +811,7 @@ minimizeChallenge.addEventListener("click", function () {
     minimizeChallenge.style.transform = `rotate(${++minimizeClick * 180}deg)`;
 });
 
+//close challenge menu and showChallengesInp uncheck
 const closeChallenge = document.getElementById("close-challenge-btn");
 closeChallenge.addEventListener("click", function () {
     challengeMenu.style.display = "none";
