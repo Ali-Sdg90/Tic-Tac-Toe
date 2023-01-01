@@ -22,10 +22,14 @@ let XOMatrix = [
 ];
 // localStorage.clear();
 const welcomeBlack = document.getElementById("black-welcome");
-welcomeBlack.style.opacity = "0";
+welcomeBlack.style.display = "block";
+welcomeBlack.style.opacity = "1";
 setTimeout(() => {
-    welcomeBlack.style.display = "none";
-}, 500);
+    welcomeBlack.style.opacity = "0";
+    setTimeout(() => {
+        welcomeBlack.style.display = "none";
+    }, 500);
+}, 10);
 
 if (localStorage.getItem("XO-Setting")) {
     let localSettingObj = JSON.parse(localStorage.getItem("XO-Setting"));
@@ -108,6 +112,8 @@ setTimeout(() => {
     document.getElementById("close-challenge-btn").style.transition =
         "background 0.3s";
     document.getElementById("nav-challenge-div").style.transition =
+        "background 0.7s";
+    document.getElementById("complete-challenges").style.transition =
         "background 0.7s";
 }, 100);
 
@@ -290,6 +296,21 @@ function challengeCompleter(inpId) {
         if (showDebug) console.log("-- challenge complete --");
         document.getElementById(inpId).checked = true;
         localStorage.setItem("XO-Challenge", saveChallenge());
+        allChallengeCompleteChecker(1000);
+    }
+}
+allChallengeCompleteChecker(0);
+function allChallengeCompleteChecker(delay) {
+    let allInpChallenge = document.querySelectorAll("#challenges input");
+    let allChallengeComplete = true;
+    for (let i of allInpChallenge) {
+        if (!i.checked) allChallengeComplete = false;
+    }
+    if (allChallengeComplete) {
+        setTimeout(() => {
+            document.getElementById("complete-challenges").style.display =
+                "block";
+        }, delay);
     }
 }
 
@@ -448,7 +469,7 @@ changeColor();
 function changeColor() {
     if (!pageColorChange) return;
     for (let i = 0; i < 3; i++)
-        rgbSaver.push(Math.floor(Math.random() * 226 + 30));
+        rgbSaver.push(Math.floor(Math.random() * 226 + 70));
     root.style.cssText = `
     --background-color: rgb(${rgbSaver[0]}, ${rgbSaver[1]}, ${rgbSaver[2]});
     --game-color: rgb(${rgbSaver[0] / 2}, ${rgbSaver[1] / 2}, ${
@@ -492,6 +513,10 @@ if (askXO) {
     chooseXOPage.style.display = "none";
 }
 
+//
+
+//
+
 let settingClicked = 0;
 settingMenu = document.getElementById("setting-menu");
 document.getElementById("setting-btn").addEventListener("click", function () {
@@ -510,9 +535,26 @@ document.getElementById("setting-btn").addEventListener("click", function () {
         settingMenu.style.opacity = "0";
     }
     document.getElementById("setting-btn").style.transform = `rotate(${
-        settingClicked * -90
+        settingClicked * 90
     }deg)`;
 });
+document
+    .getElementById("setting-btn")
+    .addEventListener("dblclick", function () {
+        localStorage.clear();
+        location.reload();
+    });
+let rotateDeg = 0;
+document
+    .getElementById("reload-page-btn")
+    .addEventListener("click", function () {
+        document.getElementById(
+            "reload-page-btn"
+        ).style.transform = `rotate(${(rotateDeg += 360)}deg)`;
+        setTimeout(() => {
+            location.reload();
+        }, 500);
+    });
 document
     .getElementById("easy-difficulty")
     .addEventListener("click", function () {
@@ -624,11 +666,11 @@ function saveSetting() {
     };
     return JSON.stringify(saveObj);
 }
-document.getElementById("reload-page").addEventListener("click", function () {
-    welcomeBlack.style.display = "block";
-    welcomeBlack.style.opacity = "1";
-    location.reload();
-});
+document
+    .getElementById("endGame-reload-page")
+    .addEventListener("click", function () {
+        location.reload();
+    });
 
 function fullGame() {
     let fullBlockCounter = 0;

@@ -5,9 +5,9 @@
     cursor: default;
 }
 :root {
-    --background-color: gray;
-    --game-color: rgb(158, 0, 0);
-    --lineColor: black;
+    --background-color: rgb(121, 204, 248);
+    --game-color: rgb(61, 102, 124);
+    --lineColor: rgb(31, 51, 62);
 }
 ::selection {
     background: transparent;
@@ -155,6 +155,7 @@ span {
     position: absolute;
     display: none;
 }
+.reload-btn,
 #challenge-menu,
 svg {
     position: absolute;
@@ -337,4 +338,26 @@ input {
 }
 .challenge-mode {
     font-weight: 600;
+}
+#complete-challenges {
+    display: none;
+    /* display: block; */
+    position: absolute;
+    background: var(--background-color);
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    padding-top: 2vh;
+    font-size: 3vh;
+}
+#complete-challenges p {
+    margin-top: 4vh;
+}
+#complete-challenges div {
+    margin-top: 23vh;
+    font-size: 2vh;
+}
+#reload-page-btn {
+    top: 10vh;
+    transition: transform 500ms;
 }
