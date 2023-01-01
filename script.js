@@ -143,6 +143,7 @@ for (let i in XOBlocks) {
                         opponentXO = "O";
                     }
                 }
+                let timeoutForOpponent = 900;
                 if (gameMode != "only-player" && gameMode != "w-friend") {
                     if (hardGameMode) {
                         if (lineFinder(opponentXO, 2, blockFinder)) {
@@ -150,7 +151,9 @@ for (let i in XOBlocks) {
                         } else if (lineFinder(playerXO, 2, blockFinder)) {
                             debugOutput += " Counter Move";
                         } else {
-                            randomMoveOpponent();
+                            if (gameMode == "unbeatable")
+                                timeoutForOpponent = randomMoveOpponent();
+                            else randomMoveOpponent();
                         }
                     } else {
                         randomMoveOpponent();
@@ -190,7 +193,7 @@ for (let i in XOBlocks) {
                         }
                         changeColor();
                         disableClick.style.display = "none";
-                    }, 900);
+                    }, timeoutForOpponent);
                 } else {
                     debugOutput += " Zzz";
                 }
@@ -202,7 +205,7 @@ for (let i in XOBlocks) {
 function randomMoveOpponent() {
     if (gameMode == "unbeatable" && hardGameMode) {
         debugOutput += " You can play again :)";
-        return;
+        return 0;
     } else if (gameMode == "unbeatable" && !hardGameMode) {
         debugOutput += " EZ :)";
     } else debugOutput += " Random Move";
