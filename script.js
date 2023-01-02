@@ -21,6 +21,7 @@ let XOMatrix = [
     ["", "", ""],
 ];
 // localStorage.clear();
+//2023/01/01 IRAN AZAD.
 
 const welcomeBlack = document.getElementById("black-welcome");
 welcomeBlack.style.display = "block";
@@ -32,7 +33,7 @@ setTimeout(() => {
     }, 500);
 }, 10);
 
-//Add settings if available
+//Add settings if available ⇩
 if (localStorage.getItem("XO-Setting")) {
     let localSettingObj = JSON.parse(localStorage.getItem("XO-Setting"));
     hardGameMode = localSettingObj.hardGameModeSave;
@@ -43,7 +44,7 @@ if (localStorage.getItem("XO-Setting")) {
     showDebug = localSettingObj.showDebugSave;
 }
 
-//Add challenges if available
+//Add challenges if available ⇩
 if (localStorage.getItem("XO-Challenge")) {
     let localChallengeObj = JSON.parse(localStorage.getItem("XO-Challenge"));
     document.getElementById("win-Default-challenge-inp").checked =
@@ -66,7 +67,7 @@ if (localStorage.getItem("XO-Challenge")) {
         localChallengeObj.unbeatableEndW5XSave;
 }
 
-//Tick the settings
+//Tick the settings ⇩
 if (hardGameMode) document.getElementById("hard-difficulty").checked = true;
 else document.getElementById("easy-difficulty").checked = true;
 if (askXO) document.getElementById("ask-xo").checked = true;
@@ -99,7 +100,7 @@ if (challengesCanRun) {
 if (showDebug) document.getElementById("debug-inp").checked = true;
 else document.getElementById("debug-inp").checked = false;
 
-//Add a transition to the element after the first page load
+//Add a transition to the element after the first page load ⇩
 setTimeout(() => {
     document.getElementsByTagName("body")[0].style.transition =
         "background 0.7s";
@@ -122,11 +123,11 @@ setTimeout(() => {
         "background 0.7s";
 }, 100);
 
-//main process
+//main process ⇩
 for (let i in XOBlocks) {
     XOBlocks[i].addEventListener("click", function () {
         if (!XOBlocks[i].textContent) {
-            //add playerXO to game
+            //add playerXO to game ⇩
             if (canPlay) {
                 XOBlocks[i].textContent = playerXO;
                 XOBlocks[i].style.cursor = "default";
@@ -134,7 +135,7 @@ for (let i in XOBlocks) {
                 changeColor();
             }
             canPlay = true;
-            //if player dosn't win opponent can play
+            //if player dosn't win opponent can play ⇩
             if (!lineFinder(playerXO, 3, endGame)) {
                 possibleOpponentPlace = [];
                 debugOutput = "Round " + ++roundNO + " =>";
@@ -167,7 +168,7 @@ for (let i in XOBlocks) {
                         randomMoveOpponent();
                     }
                     if (gameMode != "unbeatable") {
-                        //Choose a place from the possible places
+                        //Choose a place from the possible places ⇩
                         randomPlace =
                             possibleOpponentPlace[
                                 Math.floor(
@@ -183,9 +184,9 @@ for (let i in XOBlocks) {
                             XOMatrix[i[0]][i[1]] = opponentXO;
                         }
                     }
-                    //The player cannot play multiple time
+                    //The player cannot play multiple time ⇩
                     disableClick.style.display = "block";
-                    //add opponentXO to game
+                    //add opponentXO to game ⇩
                     setTimeout(() => {
                         for (let k in XOBlocks) {
                             XOBlocks[k].textContent =
@@ -198,7 +199,7 @@ for (let i in XOBlocks) {
                                         "default";
                             }
                         }
-                        //endGame if opponent win
+                        //endGame if opponent win ⇩
                         if (lineFinder(opponentXO, 3, endGame)) {
                         } else if (fullGame()) {
                             endGame();
@@ -215,7 +216,7 @@ for (let i in XOBlocks) {
     });
 }
 
-//unbeatable dosn't have randomMove
+//unbeatable dosn't have randomMove ⇩
 function randomMoveOpponent() {
     if (gameMode == "unbeatable" && hardGameMode) {
         debugOutput += " You can play again :)";
@@ -232,7 +233,7 @@ function randomMoveOpponent() {
     }
 }
 
-//lineFinder for endGame() or blockFinder()
+//lineFinder for endGame() or blockFinder() ⇩
 //ckeckFor playerXO or opponentXO
 //countTo 3 for win player or opponent
 //countTo 2 for blockFinder
@@ -288,7 +289,7 @@ function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
     return false;
 }
 
-//check if XOMatrix == Checkfor
+//check if XOMatrix == Checkfor ⇩
 function XOMatrixChecker(Checkfor) {
     challengeChecker = true;
     for (let i = 0; i < 3; i++) {
@@ -299,7 +300,7 @@ function XOMatrixChecker(Checkfor) {
     return challengeChecker;
 }
 
-//return all challenges in one obj
+//return all challenges in one obj ⇩
 function saveChallenge() {
     let saveObj = {
         defaultWinSave: document.getElementById("win-Default-challenge-inp")
@@ -322,7 +323,7 @@ function saveChallenge() {
     return JSON.stringify(saveObj);
 }
 
-//add saveChallenge to localStorage and mark a complete challenge
+//add saveChallenge to localStorage and mark a complete challenge ⇩
 function challengeCompleter(inpId) {
     if (!document.getElementById(inpId).checked) {
         if (showDebug) console.log("-- challenge complete --");
@@ -332,7 +333,7 @@ function challengeCompleter(inpId) {
     }
 }
 
-//if all challenge complete show "complete-challenges"
+//if all challenge complete show "complete-challenges" ⇩
 allChallengeCompleteChecker(0);
 function allChallengeCompleteChecker(delay) {
     let allInpChallenge = document.querySelectorAll("#challenges input");
@@ -344,13 +345,12 @@ function allChallengeCompleteChecker(delay) {
         setTimeout(() => {
             document.getElementById("complete-challenges").style.display =
                 "block";
-            document.getElementById("challenges-hint").style.display =
-                "none";
+            document.getElementById("challenges-hint").style.display = "none";
         }, delay);
     }
 }
 
-//show WinLine and check if challenge complete
+//show WinLine and check if challenge complete ⇩
 //winner can be player or opponent or empty as draw
 function endGame(i, j, diagonal, winner) {
     if (showDebug) console.log("-- Game Over --");
@@ -429,7 +429,7 @@ function endGame(i, j, diagonal, winner) {
             }
         }
     }
-    //fades everywhere except the winning blocks
+    //fades everywhere except the winning blocks ⇩
     XOBlocks.forEach(function (block) {
         if (block.textContent != winner) {
             setTimeout(() => {
@@ -443,7 +443,7 @@ function endGame(i, j, diagonal, winner) {
     } else {
         document.getElementById("win-txt").textContent = "DRAW !";
     }
-    //endGame animations and elements
+    //endGame animations and elements ⇩
     const xoGame = document.getElementById("xo-game");
     setTimeout(() => {
         xoGame.style.transition = "transform 0.7s";
@@ -461,7 +461,7 @@ function endGame(i, j, diagonal, winner) {
     }, 500);
 }
 
-//add possible Places for opponent to win or counter move
+//add possible Places for opponent to win or counter move ⇩
 function blockFinder(i, j, diagonal) {
     if (!diagonal && i) {
         i--;
@@ -500,7 +500,7 @@ function blockFinder(i, j, diagonal) {
     }
 }
 
-//make win line visible on screen
+//make win line visible on screen ⇩
 function showWinLine(num) {
     document.getElementById("win-horizontal-lines").style.display = "grid";
     document.getElementById("win-vertical-lines").style.display = "grid";
@@ -508,7 +508,7 @@ function showWinLine(num) {
     document.getElementById(`win-line${num}`).style.opacity = "1";
 }
 
-//changeColor after player or opponent move
+//changeColor after player or opponent move ⇩
 //background-color = game-color * 2 = lineColor * 3
 changeColor();
 function changeColor() {
@@ -528,7 +528,7 @@ function changeColor() {
     rgbSaver = [];
 }
 
-//change playerXO and opponentXO
+//change playerXO and opponentXO ⇩
 const chooseXOPage = document.getElementById("choose-xo");
 const xBtn = document.getElementById("x-btn");
 const oBtn = document.getElementById("o-btn");
@@ -561,7 +561,7 @@ if (askXO) {
     chooseXOPage.style.display = "none";
 }
 
-//show setting-menu and rotate setting-btn
+//show setting-menu and rotate setting-btn ⇩
 let settingClicked = 0;
 settingMenu = document.getElementById("setting-menu");
 document.getElementById("setting-btn").addEventListener("click", function () {
@@ -584,7 +584,7 @@ document.getElementById("setting-btn").addEventListener("click", function () {
     }deg)`;
 });
 
-//dblclick setting-btn to reset game
+//dblclick setting-btn to reset game ⇩
 document
     .getElementById("setting-btn")
     .addEventListener("dblclick", function () {
@@ -592,7 +592,7 @@ document
         location.reload();
     });
 
-//reload page btn and btn animation
+//reload page btn and btn animation ⇩
 let rotateDeg = 0;
 document
     .getElementById("reload-page-btn")
@@ -605,7 +605,7 @@ document
         }, 500);
     });
 
-//setting checkboxes or radios
+//setting checkboxes or radios ⇩
 //difficulty - ask-xo - gameMode - changeColor - challengesCanRun - showDebug
 document
     .getElementById("easy-difficulty")
@@ -658,7 +658,7 @@ document
         localStorage.setItem("XO-Setting", saveSetting());
     });
 
-//show-challenges can't be true while run-challenges isn't
+//show-challenges can't be true while run-challenges isn't ⇩
 document
     .getElementById("run-challenges-inp")
     .addEventListener("click", function () {
@@ -699,7 +699,7 @@ document.getElementById("debug-inp").addEventListener("click", function () {
     localStorage.setItem("XO-Setting", saveSetting());
 });
 
-//challengesCantRun by change gameMode or disable it
+//challengesCantRun by change gameMode or disable it ⇩
 function challengesCantRun() {
     runChallengesInp.checked = false;
     showChallengesInp.checked = false;
@@ -710,7 +710,7 @@ function challengesCantRun() {
     localStorage.setItem("XO-Setting", saveSetting());
 }
 
-//return all setting in one obj
+//return all setting in one obj ⇩
 function saveSetting() {
     let saveObj = {
         hardGameModeSave: hardGameMode,
@@ -723,7 +723,7 @@ function saveSetting() {
     return JSON.stringify(saveObj);
 }
 
-//endGame btn
+//endGame btn ⇩
 //github - reloud - jsfiddle
 document
     .getElementById("endGame-reload-page-btn")
@@ -731,7 +731,7 @@ document
         location.reload();
     });
 
-//check for empty block exist in game
+//check for empty block exist in game ⇩
 function fullGame() {
     let fullBlockCounter = 0;
     for (let i = 0; i < 3; i++) {
@@ -743,7 +743,7 @@ function fullGame() {
     else return true;
 }
 
-//Make the DIV element draggagle (W3):
+//Make the DIV element draggagle (W3) ⇩
 dragElement(challengeMenu);
 
 function dragElement(elmnt) {
@@ -791,7 +791,7 @@ function dragElement(elmnt) {
     }
 }
 
-//minimize challenge menu
+//minimize challenge menu ⇩
 const minimizeChallenge = document.getElementById("minimize-challenge-btn");
 let minimizeClick = 0;
 minimizeChallenge.addEventListener("click", function () {
@@ -811,7 +811,7 @@ minimizeChallenge.addEventListener("click", function () {
     minimizeChallenge.style.transform = `rotate(${++minimizeClick * 180}deg)`;
 });
 
-//close challenge menu and showChallengesInp uncheck
+//close challenge menu and showChallengesInp uncheck ⇩
 const closeChallenge = document.getElementById("close-challenge-btn");
 closeChallenge.addEventListener("click", function () {
     challengeMenu.style.display = "none";

@@ -359,7 +359,7 @@ input {
 }
 #challenges-hint div {
     position: absolute;
-    /* background: red; */
+    /* background: rgba(255, 0, 0, 0.5); */
     width: 2.6vh;
     height: 2.6vh;
     right: 1.4vh;
@@ -370,9 +370,9 @@ input {
 #hint-3-ways {
     top: 24.65vh;
 }
-#hint-lose-8{
+#hint-lose-8 {
     top: 47.5vh;
 }
-#hint-3-x{
+#hint-3-x {
     top: 50.7vh;
 }
