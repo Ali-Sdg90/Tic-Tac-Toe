@@ -24,7 +24,7 @@
             device
         </li>
         <li>
-            <strong>Unbeatable:</strong> A game mod that the computer plays only when it is threatened to lose and does everything to avoid losing, and it does not care if it is against the rules of the game!
+            <strong>Unbeatable:</strong> Game mod that the computer plays only when it is threatened to lose and does everything to avoid losing, and it does not care if it is against the rules of the game!
         </li>
     </ul>
     <h2>Live Demo</h2>
