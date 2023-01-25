@@ -2,7 +2,7 @@
     <h1>Tic Tac Toe Game</h1>
     <p>
         A simple and fun Tic Tac Toe game with local storage, different game
-        modes, customizable settings and challenging challenges.
+        modes, responsive CSS, customizable settings and challenging challenges.
     </p>
     <h2>Features</h2>
     <ul>
