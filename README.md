@@ -34,6 +34,13 @@
             >https://jsfiddle.net/Ali_Sdg90/r7Ltmk64/10/</a
         >
     </p>
+    <h2>Time laps</h2>
+    <p>
+        Link:
+        <a href="https://youtu.be/s278dOASbqg" target="_new"
+            >https://youtu.be/s278dOASbqg</a
+        >
+    </p>
     <h2>Built With</h2>
     <ul>
         <li>HTML</li>
