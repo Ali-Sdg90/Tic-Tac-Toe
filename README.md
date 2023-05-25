@@ -4,9 +4,9 @@
     responsive CSS, customizable settings and challenging challenges.
 </p>
 
-<img src="Assets/1.png" alt="tic-tac-toe-img" />
-<img src="Assets/2.png" alt="tic-tac-toe-img" />
-<img src="Assets/3.png" alt="tic-tac-toe-img" />
+<img src="Assets/1.png" alt="tic-tac-toe-img" style="height: 300px" />
+<img src="Assets/2.png" alt="tic-tac-toe-img" style="height: 300px" />
+<img src="Assets/3.png" alt="tic-tac-toe-img" style="height: 300px" />
 
 <h2>Features</h2>
 <ul>
