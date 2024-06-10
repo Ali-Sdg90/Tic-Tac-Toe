@@ -135,7 +135,7 @@ for (let i in XOBlocks) {
                 changeColor();
             }
             canPlay = true;
-            //if player dosn't win opponent can play ⇩
+            //if player don't win opponent can play ⇩
             if (!lineFinder(playerXO, 3, endGame)) {
                 possibleOpponentPlace = [];
                 debugOutput = "Round " + ++roundNO + " =>";
@@ -216,7 +216,7 @@ for (let i in XOBlocks) {
     });
 }
 
-//unbeatable dosn't have randomMove ⇩
+//unbeatable don't have randomMove ⇩
 function randomMoveOpponent() {
     if (gameMode == "unbeatable" && hardGameMode) {
         debugOutput += " You can play again :)";
@@ -234,7 +234,7 @@ function randomMoveOpponent() {
 }
 
 //lineFinder for endGame() or blockFinder() ⇩
-//ckeckFor playerXO or opponentXO
+//checkFor playerXO or opponentXO
 //countTo 3 for win player or opponent
 //countTo 2 for blockFinder
 function lineFinder(ckeckFor, countTo, endGameOrCounterMove) {
@@ -408,7 +408,7 @@ function endGame(i, j, diagonal, winner) {
             if (!winner) {
                 challengeCompleter("draw-ai-challenge-inp");
             }
-            if (!hardGameMode) {
+            if (!hardGameMode && playerXO === "O") {
                 challengeCompleter("Lose-8-ai-challenge-inp");
             }
             function xCounter(countTo) {
@@ -743,21 +743,21 @@ function fullGame() {
     else return true;
 }
 
-//Make the DIV element draggagle (W3) ⇩
+//Make the DIV element draggable (W3) ⇩
 dragElement(challengeMenu);
 
-function dragElement(elmnt) {
+function dragElement(element) {
     var pos1 = 0,
         pos2 = 0,
         pos3 = 0,
         pos4 = 0;
-    if (document.getElementById(elmnt.id + "header")) {
+    if (document.getElementById(element.id + "header")) {
         // if present, the header is where you move the DIV from:
-        document.getElementById(elmnt.id + "header").onmousedown =
+        document.getElementById(element.id + "header").onmousedown =
             dragMouseDown;
     } else {
         // otherwise, move the DIV from anywhere inside the DIV:
-        elmnt.onmousedown = dragMouseDown;
+        element.onmousedown = dragMouseDown;
     }
 
     function dragMouseDown(e) {
@@ -780,8 +780,8 @@ function dragElement(elmnt) {
         pos3 = e.clientX;
         pos4 = e.clientY;
         // set the element's new position:
-        elmnt.style.top = elmnt.offsetTop - pos2 + "px";
-        elmnt.style.left = elmnt.offsetLeft - pos1 + "px";
+        element.style.top = element.offsetTop - pos2 + "px";
+        element.style.left = element.offsetLeft - pos1 + "px";
     }
 
     function closeDragElement() {
